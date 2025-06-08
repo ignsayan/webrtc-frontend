@@ -1,23 +1,21 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../../utilities/axiosInstance';
 
-const attemptLogin = createAsyncThunk(
-    'auth/attemptLogin',
+const registerUser = createAsyncThunk(
+    'auth/registerUser',
     async (payload, { rejectWithValue }) => {
 
         try {
             const response = await axiosInstance.post(
-                '/auth/login',
+                '/auth/register',
                 payload
             );
             const data = await response.data;
-            localStorage.setItem('uid', data._id);
-            localStorage.setItem('authToken', data.token);
             return data;
 
         } catch (error) {
-            return rejectWithValue(error.message || 'Failed to login');
+            return rejectWithValue(error.message || 'Failed to register');
         }
     });
 
-export default attemptLogin;
+export default registerUser;
