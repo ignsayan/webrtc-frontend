@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { auth } from '../configs/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import {
+    googleUserAuth,
     registerUser,
     initiateLogin,
     attemptLogin,
@@ -18,22 +19,28 @@ export default function AuthPage() {
     const { loading, loaderOrigin } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
-    const handleRegistration = (data) => {
+    const handleRegistration = async (data) => {
         dispatch(initiateLogin('manual'));
-        dispatch(registerUser(data));
+        await dispatch(registerUser(data)).unwrap();
         setIsRegister(false);
     };
 
-    const handleLogin = (data) => {
+    const handleLogin = async (data) => {
         dispatch(initiateLogin('manual'));
-        dispatch(attemptLogin(data));
+        await dispatch(attemptLogin(data)).unwrap();
     };
 
     const handleGoogleAuthentication = async () => {
         dispatch(initiateLogin('google'));
         const provider = new GoogleAuthProvider();
         const google = await signInWithPopup(auth, provider);
-        dispatch(attemptLogin(google.user));
+        const name = google.user.displayName?.split(' ') || [];
+        const data = {
+            first_name: name.shift(),
+            last_name: name.join(' ') || null,
+            email: google.user.email,
+        };
+        dispatch(googleUserAuth(data));
     };
 
     return (
@@ -69,11 +76,13 @@ export default function AuthPage() {
                             loading={loading && loaderOrigin === 'manual'}
                             handleLogin={handleLogin} />
                 }
-                <div className="my-4 text-center text-sm text-gray-400">
-                    or continue
+                <div className="my-6 flex items-center text-gray-400 text-sm">
+                    <div className="flex-grow border-t border-gray-600"></div>
+                    <span className="mx-4">OR</span>
+                    <div className="flex-grow border-t border-gray-600"></div>
                 </div>
                 <GoogleAuth
-                    labelPrefix={isRegister ? 'Register' : 'Login'}
+                    labelPrefix={isRegister ? 'Signup' : 'Login'}
                     handleGoogleAuthentication={handleGoogleAuthentication}
                     loading={loading && loaderOrigin === 'google'}
                 />

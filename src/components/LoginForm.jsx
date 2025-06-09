@@ -60,7 +60,7 @@ export default function LoginForm({
                             ></path>
                         </svg>
                     )}
-                    Sign in
+                    Log in
                 </button>
             </form>
         </>

@@ -1,6 +1,7 @@
 import { createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
 import registerUser from './slices/registerUser';
 import attemptLogin from './slices/attemptLogin';
+import googleUserAuth from './slices/googleUserAuth';
 import logoutUser from './slices/logoutUser';
 
 const initialState = {
@@ -34,6 +35,13 @@ export const authSlice = createSlice({
                 state.isAuthenticated = true;
                 state.loading = false;
             })
+            .addCase(googleUserAuth.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(googleUserAuth.fulfilled, (state) => {
+                state.isAuthenticated = true;
+                state.loading = false;
+            })
             .addCase(logoutUser.pending, (state) => {
                 state.loading = true;
             })
@@ -52,6 +60,7 @@ export const { initiateLogin } = authSlice.actions;
 export {
     registerUser,
     attemptLogin,
+    googleUserAuth,
     logoutUser,
 };
 
