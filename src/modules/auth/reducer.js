@@ -9,6 +9,7 @@ const initialState = {
     loaderOrigin: null,
     isAuthenticated: localStorage.getItem('authToken') ? true : false,
     error: null,
+    message: null,
 };
 
 export const authSlice = createSlice({
@@ -19,27 +20,34 @@ export const authSlice = createSlice({
             state.loading = true;
             state.loaderOrigin = action.payload
         },
+        clearFeedback: (state) => {
+            state.message = null;
+            state.error = null;
+        },
     },
     extraReducers: (builder) => {
         builder
             .addCase(registerUser.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(registerUser.fulfilled, (state) => {
+            .addCase(registerUser.fulfilled, (state, action) => {
+                state.message = action.payload.message;
                 state.loading = false;
             })
             .addCase(attemptLogin.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(attemptLogin.fulfilled, (state) => {
+            .addCase(attemptLogin.fulfilled, (state, action) => {
                 state.isAuthenticated = true;
+                state.message = action.payload.message;
                 state.loading = false;
             })
             .addCase(googleUserAuth.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(googleUserAuth.fulfilled, (state) => {
+            .addCase(googleUserAuth.fulfilled, (state, action) => {
                 state.isAuthenticated = true;
+                state.message = action.payload.message;
                 state.loading = false;
             })
             .addCase(logoutUser.pending, (state) => {
@@ -47,16 +55,21 @@ export const authSlice = createSlice({
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.isAuthenticated = false;
+                state.message = 'Logout successful';
                 state.loading = false;
             })
             .addMatcher(isRejectedWithValue, (state, action) => {
-                state.error = action.payload;
+                state.error = {
+                    message: action.payload?.message,
+                    status: action.payload?.status,
+                    errors: action.payload?.errors,
+                };
                 state.loading = false;
-            })
+            });
     }
 });
 
-export const { initiateLogin } = authSlice.actions;
+export const { initiateLogin, clearFeedback } = authSlice.actions;
 export {
     registerUser,
     attemptLogin,

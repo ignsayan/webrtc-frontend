@@ -29,13 +29,13 @@ const useAxios = () => {
             setResponse(result.data);
 
         } catch (error) {
-            const message = error?.response?.data?.message || error.message;
-            setError(message || 'Something went wrong');
+            setError(error);
 
         } finally {
             setLoading(false);
         }
     };
+
     return {
         apiHandler,
         loading,

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import FriendList from '../components/FriendList';
 import ChatStartScreen from '../components/ChatStartScreen';
 import ChatWindow from '../components/ChatWindow';
-import { logoutUser } from '../modules/auth/reducer';
+import { clearFeedback, logoutUser } from '../modules/auth/reducer';
 import {
     getAvailableUsers,
     getChatroomUser,
@@ -12,10 +12,16 @@ import {
     resetChatState,
     sendMessage,
 } from '../modules/chat/reducer';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function ChatLayout() {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const dispatch = useDispatch();
+    const {
+        error,
+        message
+    } = useSelector((state) => state.auth);
     const {
         loading,
         users,
@@ -23,11 +29,16 @@ export default function ChatLayout() {
         activeChatUser,
         chats
     } = useSelector((state) => state.chat);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getAvailableUsers());
     }, []);
+
+    useEffect(() => {
+        dispatch(clearFeedback());
+        if (error) toast.error(error.message);
+        if (message) toast.success(message);
+    }, [error, message]);
 
     const openInbox = (uid) => () => {
         const currentUserId = localStorage.getItem('uid');
@@ -58,24 +69,27 @@ export default function ChatLayout() {
     };
 
     return (
-        <div className="min-h-screen flex bg-gray-900 text-white overflow-hidden">
-            <FriendList
-                sidebarOpen={sidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-                users={users}
-                openInbox={openInbox}
-                handleLogout={handleLogout}
-                loading={loading}
-            />
-            {!activeChatRoom
-                ? <ChatStartScreen setSidebarOpen={setSidebarOpen} />
-                : <ChatWindow
+        <>
+            <div className="min-h-screen flex bg-gray-900 text-white overflow-hidden">
+                <FriendList
+                    sidebarOpen={sidebarOpen}
                     setSidebarOpen={setSidebarOpen}
-                    activeChatUser={activeChatUser}
-                    chats={chats}
-                    handleReply={handleReply}
+                    users={users}
+                    openInbox={openInbox}
+                    handleLogout={handleLogout}
+                    loading={loading}
                 />
-            }
-        </div>
+                {!activeChatRoom
+                    ? <ChatStartScreen setSidebarOpen={setSidebarOpen} />
+                    : <ChatWindow
+                        setSidebarOpen={setSidebarOpen}
+                        activeChatUser={activeChatUser}
+                        chats={chats}
+                        handleReply={handleReply}
+                    />
+                }
+            </div>
+            <Toaster position="bottom-center" />
+        </>
     );
 }

@@ -10,11 +10,11 @@ const registerUser = createAsyncThunk(
                 '/auth/register',
                 payload
             );
-            const data = await response.data;
+            const data = response.data;
             return data;
 
         } catch (error) {
-            return rejectWithValue(error.message || 'Failed to register');
+            return rejectWithValue(error);
         }
     });
 

@@ -10,13 +10,13 @@ const attemptLogin = createAsyncThunk(
                 '/auth/login',
                 payload
             );
-            const data = await response.data;
-            localStorage.setItem('uid', data._id);
-            localStorage.setItem('authToken', data.token);
+            const data = response.data;
+            localStorage.setItem('uid', data.data.user._id);
+            localStorage.setItem('authToken', data.data.token);
             return data;
 
         } catch (error) {
-            return rejectWithValue(error.message || 'Failed to login');
+            return rejectWithValue(error);
         }
     });
 
