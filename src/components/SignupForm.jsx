@@ -28,7 +28,7 @@ export default function SignupForm({
                             type="text"
                             name="first_name"
                             placeholder="First name"
-                            
+                            required
                             className="w-full px-3 py-2 rounded bg-gray-700 text-white focus:outline-none"
                         />
                         {error?.first_name && <p className="text-red-500 text-sm mt-1">{error.first_name}</p>}
@@ -38,7 +38,7 @@ export default function SignupForm({
                             type="text"
                             name="last_name"
                             placeholder="Last name"
-                            
+                            required
                             className="w-full px-3 py-2 rounded bg-gray-700 text-white focus:outline-none"
                         />
                         {error?.last_name && <p className="text-red-500 text-sm mt-1">{error.last_name}</p>}
@@ -50,7 +50,7 @@ export default function SignupForm({
                         type="email"
                         name="email"
                         placeholder="you@example.com"
-                        
+                        required
                         className="w-full px-3 py-2 rounded bg-gray-700 text-white focus:outline-none"
                     />
                     {error?.email && <p className="text-red-500 text-sm mt-1">{error.email}</p>}
@@ -61,7 +61,7 @@ export default function SignupForm({
                         type="password"
                         name="password"
                         placeholder="••••••••"
-                        
+                        required
                         className="w-full px-3 py-2 rounded bg-gray-700 text-white focus:outline-none"
                     />
                     {error?.password && <p className="text-red-500 text-sm mt-1">{error.password}</p>}
@@ -72,7 +72,7 @@ export default function SignupForm({
                         type="password"
                         name="password_confirmation"
                         placeholder="••••••••"
-                        
+                        required
                         className="w-full px-3 py-2 rounded bg-gray-700 text-white focus:outline-none"
                     />
                 </div>
