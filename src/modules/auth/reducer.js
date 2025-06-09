@@ -7,7 +7,7 @@ import logoutUser from './slices/logoutUser';
 const initialState = {
     loading: false,
     loaderOrigin: null,
-    isAuthenticated: localStorage.getItem('authToken') ? true : false,
+    isAuthenticated: localStorage.getItem('token') ? true : false,
     error: null,
     message: null,
 };
@@ -53,16 +53,16 @@ export const authSlice = createSlice({
             .addCase(logoutUser.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(logoutUser.fulfilled, (state) => {
+            .addCase(logoutUser.fulfilled, (state, action) => {
                 state.isAuthenticated = false;
-                state.message = 'Logout successful';
+                state.message = action.payload.message;
                 state.loading = false;
             })
             .addMatcher(isRejectedWithValue, (state, action) => {
                 state.error = {
-                    message: action.payload?.message,
-                    status: action.payload?.status,
-                    errors: action.payload?.errors,
+                    message: action.payload.message,
+                    status: action.payload.status,
+                    errors: action.payload.errors,
                 };
                 state.loading = false;
             });

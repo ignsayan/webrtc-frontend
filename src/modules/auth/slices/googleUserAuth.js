@@ -12,7 +12,7 @@ const googleUserAuth = createAsyncThunk(
             );
             const data = response.data;
             localStorage.setItem('uid', data.data.user._id);
-            localStorage.setItem('authToken', data.data.token);
+            localStorage.setItem('token', data.data.token);
             return data;
 
         } catch (error) {

@@ -5,7 +5,7 @@ import GoogleAuth from '../components/GoogleAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { auth } from '../configs/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import toast, { Toaster } from 'react-hot-toast';
+import ToastNotifier from '../components/ToastNotifier';
 import {
     googleUserAuth,
     registerUser,
@@ -24,12 +24,6 @@ export default function AuthPage() {
         error,
         message
     } = useSelector((state) => state.auth);
-
-    useEffect(() => {
-        dispatch(clearFeedback());
-        if (error) toast.error(error.message);
-        if (message) toast.success(message);
-    }, [error, message]);
 
     const handleRegistration = async (data) => {
         dispatch(initiateLogin('manual'));
@@ -108,7 +102,10 @@ export default function AuthPage() {
                     </div>
                 </div>
             </div>
-            <Toaster position="bottom-center" />
+            <ToastNotifier
+                message={message}
+                error={error}
+            />
         </>
     );
 }

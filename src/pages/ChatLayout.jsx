@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import FriendList from '../components/FriendList';
 import ChatStartScreen from '../components/ChatStartScreen';
 import ChatWindow from '../components/ChatWindow';
-import { clearFeedback, logoutUser } from '../modules/auth/reducer';
+import ToastNotifier from '../components/ToastNotifier';
+import { logoutUser } from '../modules/auth/reducer';
 import {
     getAvailableUsers,
     getChatroomUser,
@@ -12,7 +13,6 @@ import {
     resetChatState,
     sendMessage,
 } from '../modules/chat/reducer';
-import toast, { Toaster } from 'react-hot-toast';
 
 export default function ChatLayout() {
 
@@ -33,12 +33,6 @@ export default function ChatLayout() {
     useEffect(() => {
         dispatch(getAvailableUsers());
     }, []);
-
-    useEffect(() => {
-        dispatch(clearFeedback());
-        if (error) toast.error(error.message);
-        if (message) toast.success(message);
-    }, [error, message]);
 
     const openInbox = (uid) => () => {
         const currentUserId = localStorage.getItem('uid');
@@ -89,7 +83,10 @@ export default function ChatLayout() {
                     />
                 }
             </div>
-            <Toaster position="bottom-center" />
+            <ToastNotifier
+                message={message}
+                error={error}
+            />
         </>
     );
 }
