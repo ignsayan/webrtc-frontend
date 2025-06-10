@@ -1,16 +1,27 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import ChatLayout from '../pages/ChatLayout';
+import {
+    Navigate,
+    Outlet,
+    Route,
+} from 'react-router-dom';
 
-export default function PublicRoutes() {
+export default function ProtectedRoutes() {
+
+    const Guard = () => {
+        const { isAuthenticated } = useSelector((state) => state.auth);
+        return isAuthenticated ? <Outlet /> : <Navigate to='/login' />;
+    };
+
     return (
         <>
-            <Routes>
+            <Route element={<Guard />}>
                 <Route
                     exact path="/"
                     element={<ChatLayout />}
                 />
-            </Routes>
+            </Route>
         </>
     );
 }
+

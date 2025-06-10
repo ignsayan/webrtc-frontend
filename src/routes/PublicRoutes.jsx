@@ -1,17 +1,23 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import AuthLayout from '../pages/AuthLayout';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
-import { useSelector } from 'react-redux';
+import {
+    Navigate,
+    Outlet,
+    Route,
+} from 'react-router-dom';
 
 export default function PublicRoutes() {
 
-    const { isAuthenticated } = useSelector((state) => state.auth);
-    
+    const Guard = () => {
+        const { isAuthenticated } = useSelector((state) => state.auth);
+        return !isAuthenticated ? <Outlet /> : <Navigate to='/' />;
+    };
+
     return (
         <>
-            <Routes>
+            <Route element={<Guard />}>
                 <Route
                     exact path="/login"
                     element={<AuthLayout />}
@@ -24,7 +30,7 @@ export default function PublicRoutes() {
                     exact path="/reset-password"
                     element={<ResetPassword />}
                 />
-            </Routes>
+            </Route>
         </>
     );
 }
