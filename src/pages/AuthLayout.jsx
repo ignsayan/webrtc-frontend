@@ -6,12 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { auth } from '../configs/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import ToastNotifier from '../components/ToastNotifier';
+import { Link } from 'react-router-dom';
 import {
     googleUserAuth,
     registerUser,
     initiateLogin,
     attemptLogin,
-    clearFeedback,
 } from '../modules/auth/reducer';
 
 export default function AuthPage() {
@@ -46,7 +46,7 @@ export default function AuthPage() {
             last_name: name.join(' ') || null,
             email: google.user.email,
         };
-        dispatch(googleUserAuth(data));
+        await dispatch(googleUserAuth(data)).unwrap();
     };
 
     return (
@@ -98,7 +98,7 @@ export default function AuthPage() {
 
                     <div className="mt-6 text-sm text-center text-gray-400">
                         Forgot your password?{' '}
-                        <a href="#" className="text-blue-500">Reset</a>
+                        <Link to="/forgot-password" className="text-blue-500">Reset</Link>
                     </div>
                 </div>
             </div>

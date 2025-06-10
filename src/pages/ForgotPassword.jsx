@@ -1,40 +1,64 @@
 import React from 'react';
+import Button from '../components/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { forgotPasswordEmail } from '../modules/auth/reducer';
+import ToastNotifier from '../components/ToastNotifier';
+import { Link } from 'react-router-dom';
 
-export default function ResetPassword() {
+export default function ForgotPassword() {
+
+    const dispatch = useDispatch();
+    const {
+        loading,
+        error,
+        message
+    } = useSelector((state) => state.auth);
+
+    const getPasswordResetLink = async (form) => {
+        const data = {
+            email: form.get('email'),
+        };
+        await dispatch(forgotPasswordEmail(data)).unwrap();
+    };
 
     return (
-        <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
-            <div className="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-sm text-white">
-                <h1 className="text-2xl font-bold text-center mb-6">Reset Password</h1>
-                <p className="text-sm text-gray-400 text-center mb-6">
-                    Enter your email and we’ll send you a reset link.
-                </p>
+        <>
+            <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+                <div className="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-sm text-white">
+                    <h1 className="text-2xl font-bold text-center mb-6">Forgot Password</h1>
+                    <p className="text-sm text-gray-400 text-center mb-6">
+                        Enter your email and we’ll send you a reset link.
+                    </p>
 
-                <form className="space-y-4 text-left">
-                    <div>
-                        <label className="block text-sm mb-1">Email</label>
-                        <input
-                            type="email"
-                            placeholder="you@example.com"
-                            className="w-full px-3 py-2 rounded bg-gray-700 text-white focus:outline-none"
+                    <form className="space-y-4 text-left" action={getPasswordResetLink}>
+                        <div>
+                            <label className="block text-sm mb-1">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="you@example.com"
+
+                                className="w-full px-3 py-2 rounded bg-gray-700 text-white focus:outline-none"
+                            />
+                            {error?.errors?.email && <p className="text-red-500 text-sm mt-1">{error?.errors?.email}</p>}
+                        </div>
+                        <Button
+                            type="submit"
+                            loading={loading}
+                            label="Send reset link"
                         />
+                    </form>
+
+                    <div className="mt-6 text-sm text-center text-gray-400">
+                        Remembered your password?{' '}
+                        <Link to="/login" className="text-blue-400 hover:underline">Login</Link>
                     </div>
-
-                    <button
-                        type="submit"
-                        className="w-full py-2 rounded bg-blue-600 hover:bg-blue-500 text-white font-semibold"
-                    >
-                        Send Reset Link
-                    </button>
-                </form>
-
-                <div className="mt-6 text-sm text-center text-gray-400">
-                    Remembered your password?{' '}
-                    <a href="/login" className="text-blue-400 hover:underline">
-                        Log In
-                    </a>
                 </div>
             </div>
-        </div>
+            <ToastNotifier
+                message={message}
+                error={error}
+            />
+        </>
     );
 }

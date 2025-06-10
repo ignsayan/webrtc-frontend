@@ -3,6 +3,8 @@ import registerUser from './slices/registerUser';
 import attemptLogin from './slices/attemptLogin';
 import googleUserAuth from './slices/googleUserAuth';
 import logoutUser from './slices/logoutUser';
+import forgotPasswordEmail from './slices/forgotPasswordEmail';
+import resetPassword from './slices/resetPassword';
 
 const initialState = {
     loading: false,
@@ -58,6 +60,20 @@ export const authSlice = createSlice({
                 state.message = action.payload.message;
                 state.loading = false;
             })
+            .addCase(forgotPasswordEmail.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(forgotPasswordEmail.fulfilled, (state, action) => {
+                state.message = action.payload.message;
+                state.loading = false;
+            })
+            .addCase(resetPassword.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(resetPassword.fulfilled, (state, action) => {
+                state.message = action.payload.message;
+                state.loading = false;
+            })
             .addMatcher(isRejectedWithValue, (state, action) => {
                 state.error = {
                     message: action.payload.message,
@@ -75,6 +91,8 @@ export {
     attemptLogin,
     googleUserAuth,
     logoutUser,
+    forgotPasswordEmail,
+    resetPassword,
 };
 
 export default authSlice.reducer;
