@@ -37,7 +37,7 @@ export default function ForgotPassword() {
                                 type="email"
                                 name="email"
                                 placeholder="you@example.com"
-
+                                required
                                 className="w-full px-3 py-2 rounded bg-gray-700 text-white focus:outline-none"
                             />
                             {error?.errors?.email && <p className="text-red-500 text-sm mt-1">{error?.errors?.email}</p>}
