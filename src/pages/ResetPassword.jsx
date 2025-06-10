@@ -19,10 +19,10 @@ export default function ResetPassword() {
         event.preventDefault();
         const form = new FormData(event.target);
         const data = {
-            'token': new URLSearchParams(window.location.search).get('token'),
-            'email': new URLSearchParams(window.location.search).get('email'),
-            'password': form.get('password'),
-            'password_confirmation': form.get('password_confirmation'),
+            token: new URLSearchParams(window.location.search).get('token'),
+            email: new URLSearchParams(window.location.search).get('email'),
+            password: form.get('password'),
+            password_confirmation: form.get('password_confirmation'),
         };
         await dispatch(resetPassword(data)).unwrap();
         navigate('/login');

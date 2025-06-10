@@ -14,7 +14,9 @@ export default function ForgotPassword() {
         message
     } = useSelector((state) => state.auth);
 
-    const getPasswordResetLink = async (form) => {
+    const getPasswordResetLink = async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.target);
         const data = {
             email: form.get('email'),
         };
@@ -30,7 +32,7 @@ export default function ForgotPassword() {
                         Enter your email and we’ll send you a reset link.
                     </p>
 
-                    <form className="space-y-4 text-left" action={getPasswordResetLink}>
+                    <form className="space-y-4 text-left" onSubmit={getPasswordResetLink}>
                         <div>
                             <label className="block text-sm mb-1">Email</label>
                             <input
