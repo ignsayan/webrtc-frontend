@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import Button from './Button';
@@ -9,11 +9,14 @@ export default function SignupForm({
     error,
 }) {
 
+    const phoneRef = useRef(null);
+
     const handleSubmit = (form) => {
         const data = {
             first_name: form.get('first_name'),
             last_name: form.get('last_name'),
             email: form.get('email'),
+            phone: form.get('phone').replace(/[^+\d]/g, ''),
             password: form.get('password'),
             password_confirmation: form.get('password_confirmation'),
         };
@@ -59,7 +62,14 @@ export default function SignupForm({
                 </div>
                 <div>
                     <label className="block text-sm mb-1">Phone Number</label>
-                    <PhoneInput country="in" />
+                    <PhoneInput country="in"
+                        onChange={() => phoneRef.current?.focus()}
+                        inputProps={{
+                            name: 'phone',
+                            ref: phoneRef,
+                        }}
+                    />
+                    {error?.phone && <p className="text-red-500 text-sm mt-1">{error.phone}</p>}
                 </div>
                 <div>
                     <label className="block text-sm mb-1">New Password</label>

@@ -23,6 +23,12 @@ export default function OtpInput({
         }
     };
 
+    const handlePaste = (e) => {
+        const digits = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+        digits.split('').forEach((d, i) => inputs.current[i].value = d);
+        inputs.current[digits.length - 1].focus();
+    };
+
     const verify = () => {
         const code = inputs.current.map((input) => input.value).join('');
         handleVerification(code);
@@ -40,8 +46,9 @@ export default function OtpInput({
                         pattern="[0-9]*"
                         onChange={(e) => handleInput(e, i)}
                         onKeyDown={(e) => handleKeyDown(e, i)}
+                        onPaste={handlePaste}
                         ref={(el) => inputs.current[i] = el}
-                        className="w-10 h-10 text-center text-xl font-bold rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-600 transition-all"
+                        className="w-10 h-10 text-center text-xl font-bold rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-600 transition-all"
                     />
                 ))}
             </div>
