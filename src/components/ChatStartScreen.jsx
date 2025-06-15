@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { MdChat } from 'react-icons/md';
 
 export default function ChatStartScreen({ setSidebarOpen }) {

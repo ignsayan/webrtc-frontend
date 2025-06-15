@@ -1,4 +1,6 @@
 import React from 'react'
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import Button from './Button';
 
 export default function SignupForm({
@@ -54,6 +56,10 @@ export default function SignupForm({
                         className="w-full px-3 py-2 rounded bg-gray-700 text-white focus:outline-none"
                     />
                     {error?.email && <p className="text-red-500 text-sm mt-1">{error.email}</p>}
+                </div>
+                <div>
+                    <label className="block text-sm mb-1">Phone Number</label>
+                    <PhoneInput country="in" />
                 </div>
                 <div>
                     <label className="block text-sm mb-1">New Password</label>

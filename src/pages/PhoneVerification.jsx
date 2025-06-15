@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import OtpInput from '../components/OtpInput';
 import { useDispatch, useSelector } from 'react-redux';
 import ToastNotifier from '../components/ToastNotifier';

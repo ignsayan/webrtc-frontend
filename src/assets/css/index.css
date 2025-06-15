@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+/* PhoneInput wrapper */
+.react-tel-input {
+    width: 100%;
+}
+
+/* Input field */
+.react-tel-input .form-control {
+    background-color: #374151 !important;
+    border: none !important;
+    width: 100% !important;
+    height: 40px !important;
+}
+
+/* Flag dropdown (button) */
+.react-tel-input .flag-dropdown {
+    background-color: #374151 !important;
+    border: none !important;
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+}
+
+/* Make sure the flag image fills the space */
+.react-tel-input .flag-dropdown .selected-flag {
+    background: #374151 !important;
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+}
+
+/* Flag image itself */
+.react-tel-input .flag {
+    border-radius: 2px;
+    box-shadow: none !important;
+}
+
+/* Country dropdown list */
+.react-tel-input .country-list {
+    background-color: #1f2937 !important;
+    max-height: 150px !important;
+    border-top-left-radius: 1px !important;
+    border-bottom-left-radius: 1px !important;
+}
+
+/* Highlighted country item */
+.react-tel-input .country:hover,
+.react-tel-input .country.highlight {
+    background-color: #374151 !important;
+    color: white !important;
+}
