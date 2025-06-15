@@ -1,19 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../../utilities/axiosInstance';
 
-const logoutUser = createAsyncThunk(
-    'auth/logoutUser',
-    async (_, { rejectWithValue }) => {
+const sendVerification = createAsyncThunk(
+    'auth/sendVerification',
+    async (payload, { rejectWithValue }) => {
 
         try {
             const response = await axiosInstance.post(
-                '/auth/logout'
+                '/auth/send-verification',
+                payload
             );
             const data = response.data;
-            if (response.status === 200) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-            }
             return data;
 
         } catch (error) {
@@ -21,4 +18,4 @@ const logoutUser = createAsyncThunk(
         }
     });
 
-export default logoutUser;
+export default sendVerification;

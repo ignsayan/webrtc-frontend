@@ -41,7 +41,6 @@ export default function LoginForm({
                     {error?.password && <p className="text-red-500 text-sm mt-1">{error.password}</p>}
                 </div>
                 <Button
-                    type="submit"
                     loading={loading}
                     label="Log in"
                 />

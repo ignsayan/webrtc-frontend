@@ -1,33 +1,32 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../../utilities/axiosInstance';
 
-const attemptLogin = createAsyncThunk(
-    'auth/attemptLogin',
-    async (payload, { rejectWithValue }) => {
+const verifyOtp = createAsyncThunk(
+    'auth/otpVerification',
+    async (payload, { rejectWithValue, getState }) => {
 
         try {
             const response = await axiosInstance.post(
-                '/auth/login',
+                '/auth/verify',
                 payload
             );
-
             const data = response.data;
-            localStorage.setItem('token', data.data.token);
 
+            const existing = getState().auth.user;
             const user = response.data.data.user;
+
             localStorage.setItem('user', JSON.stringify({
-                uid: user._id,
-                email: user.email || null,
+                ...existing,
                 email_verified_at: user.email_verified_at,
-                phone: user.phone || null,
                 phone_verified_at: user.phone_verified_at,
             }));
 
-            return data;
+            const channel = payload.channel;
+            return { ...data, channel };
 
         } catch (error) {
             return rejectWithValue(error);
         }
     });
 
-export default attemptLogin;
+export default verifyOtp;

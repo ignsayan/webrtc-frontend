@@ -60,7 +60,6 @@ export default function ResetPassword() {
                             />
                         </div>
                         <Button
-                            type="submit"
                             loading={loading}
                             label="Set new password"
                         />

@@ -77,7 +77,6 @@ export default function SignupForm({
                     />
                 </div>
                 <Button
-                    type="submit"
                     loading={loading}
                     label="Sign up"
                 />

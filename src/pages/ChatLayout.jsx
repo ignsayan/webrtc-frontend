@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import EmailVerification from './EmailVerification';
+import PhoneVerification from './PhoneVerification';
 import FriendList from '../components/FriendList';
 import ChatStartScreen from '../components/ChatStartScreen';
 import ChatWindow from '../components/ChatWindow';
@@ -19,6 +21,7 @@ export default function ChatLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const dispatch = useDispatch();
     const {
+        user,
         error,
         message
     } = useSelector((state) => state.auth);
@@ -61,6 +64,9 @@ export default function ChatLayout() {
         dispatch(resetChatState({ type: 'logout' }));
         dispatch(logoutUser());
     };
+
+    if (!user?.email_verified_at) return <EmailVerification />;
+    // if (!user?.phone_verified_at) return <PhoneVerification />;
 
     return (
         <>

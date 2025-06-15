@@ -2,14 +2,20 @@ import { createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
 import registerUser from './slices/registerUser';
 import attemptLogin from './slices/attemptLogin';
 import googleUserAuth from './slices/googleUserAuth';
+import sendVerification from './slices/sendVerification';
+import verifyOtp from './slices/verifyOtp';
 import logoutUser from './slices/logoutUser';
 import forgotPasswordEmail from './slices/forgotPasswordEmail';
 import resetPassword from './slices/resetPassword';
 
+const user = localStorage.getItem('user');
+const token = localStorage.getItem('token');
+
 const initialState = {
+    user: user ? JSON.parse(user) : null,
+    isAuthenticated: token ? true : false,
     loading: false,
     loaderOrigin: null,
-    isAuthenticated: localStorage.getItem('token') ? true : false,
     error: null,
     message: null,
 };
@@ -29,27 +35,39 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(registerUser.pending, (state) => {
-                state.loading = true;
-            })
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.message = action.payload.message;
                 state.loading = false;
-            })
-            .addCase(attemptLogin.pending, (state) => {
-                state.loading = true;
             })
             .addCase(attemptLogin.fulfilled, (state, action) => {
                 state.isAuthenticated = true;
                 state.message = action.payload.message;
                 state.loading = false;
             })
-            .addCase(googleUserAuth.pending, (state) => {
-                state.loading = true;
-            })
             .addCase(googleUserAuth.fulfilled, (state, action) => {
                 state.isAuthenticated = true;
                 state.message = action.payload.message;
+                state.loading = false;
+            })
+            .addCase(sendVerification.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(sendVerification.fulfilled, (state, action) => {
+                state.message = action.payload.message;
+                state.loading = false;
+            })
+            .addCase(verifyOtp.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(verifyOtp.fulfilled, (state, action) => {
+                const data = action.payload;
+                if (data.channel === 'email') {
+                    state.user.email_verified_at = data.data.user.email_verified_at;
+                }
+                if (data.channel === 'phone') {
+                    state.user.phone_verified_at = data.data.user.phone_verified_at;
+                }
+                state.message = data.message;
                 state.loading = false;
             })
             .addCase(logoutUser.pending, (state) => {
@@ -90,6 +108,8 @@ export {
     registerUser,
     attemptLogin,
     googleUserAuth,
+    sendVerification,
+    verifyOtp,
     logoutUser,
     forgotPasswordEmail,
     resetPassword,

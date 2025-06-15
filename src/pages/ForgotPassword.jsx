@@ -45,7 +45,6 @@ export default function ForgotPassword() {
                             {error?.errors?.email && <p className="text-red-500 text-sm mt-1">{error?.errors?.email}</p>}
                         </div>
                         <Button
-                            type="submit"
                             loading={loading}
                             label="Send reset link"
                         />
