@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import EmailVerification from './EmailVerification';
-import PhoneVerification from './PhoneVerification';
 import FriendList from '../components/FriendList';
 import ChatStartScreen from '../components/ChatStartScreen';
 import ChatWindow from '../components/ChatWindow';
@@ -19,6 +18,7 @@ import {
 export default function ChatLayout() {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const {
         user,
@@ -34,6 +34,8 @@ export default function ChatLayout() {
     } = useSelector((state) => state.chat);
 
     useEffect(() => {
+        if (!user?.email_verified_at) navigate('/verification/email');
+        // if (!user?.phone_verified_at) navigate('/verification/phone');
         dispatch(getAvailableUsers());
     }, []);
 
@@ -65,34 +67,35 @@ export default function ChatLayout() {
         dispatch(logoutUser());
     };
 
-    if (!user?.email_verified_at) return <EmailVerification />;
-    // if (!user?.phone_verified_at) return <PhoneVerification />;
-
     return (
         <>
-            <div className="min-h-screen flex bg-gray-900 text-white overflow-hidden">
-                <FriendList
-                    sidebarOpen={sidebarOpen}
-                    setSidebarOpen={setSidebarOpen}
-                    users={users}
-                    openInbox={openInbox}
-                    handleLogout={handleLogout}
-                    loading={loading}
-                />
-                {!activeChatRoom
-                    ? <ChatStartScreen setSidebarOpen={setSidebarOpen} />
-                    : <ChatWindow
-                        setSidebarOpen={setSidebarOpen}
-                        activeChatUser={activeChatUser}
-                        chats={chats}
-                        handleReply={handleReply}
+            {user?.email_verified_at && user?.phone_verified_at &&
+                <>
+                    <div className="min-h-screen flex bg-gray-900 text-white overflow-hidden">
+                        <FriendList
+                            sidebarOpen={sidebarOpen}
+                            setSidebarOpen={setSidebarOpen}
+                            users={users}
+                            openInbox={openInbox}
+                            handleLogout={handleLogout}
+                            loading={loading}
+                        />
+                        {!activeChatRoom
+                            ? <ChatStartScreen setSidebarOpen={setSidebarOpen} />
+                            : <ChatWindow
+                                setSidebarOpen={setSidebarOpen}
+                                activeChatUser={activeChatUser}
+                                chats={chats}
+                                handleReply={handleReply}
+                            />
+                        }
+                    </div>
+                    <ToastNotifier
+                        message={message}
+                        error={error}
                     />
-                }
-            </div>
-            <ToastNotifier
-                message={message}
-                error={error}
-            />
+                </>
+            }
         </>
     );
 }
