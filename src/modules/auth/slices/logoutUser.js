@@ -12,7 +12,6 @@ const logoutUser = createAsyncThunk(
             const data = response.data;
             if (response.status === 200) {
                 localStorage.removeItem('token');
-                localStorage.removeItem('user');
             }
             return data;
 

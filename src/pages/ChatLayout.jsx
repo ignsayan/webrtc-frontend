@@ -34,10 +34,10 @@ export default function ChatLayout() {
     } = useSelector((state) => state.chat);
 
     useEffect(() => {
-        if (!user?.email_verified_at) navigate('/verification/email');
-        // if (!user?.phone_verified_at) navigate('/verification/phone');
+        if (!user.email_verified_at) navigate('/verification/email');
+        if (!user.phone_verified_at) navigate('/verification/phone');
         dispatch(getAvailableUsers());
-    }, []);
+    }, [user]);
 
     const openInbox = (uid) => () => {
         const currentUserId = localStorage.getItem('uid');

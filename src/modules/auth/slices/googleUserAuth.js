@@ -10,20 +10,22 @@ const googleUserAuth = createAsyncThunk(
                 '/auth/google',
                 payload
             );
-            
+
             const data = response.data;
+            const user = data.data.user;
+
             localStorage.setItem('token', data.data.token);
 
-            const user = response.data.data.user;
-            localStorage.setItem('user', JSON.stringify({
-                uid: user._id,
-                email: user.email || null,
-                email_verified_at: user.email_verified_at,
-                phone: user.phone || null,
-                phone_verified_at: user.phone_verified_at,
-            }));
-
-            return data;
+            return {
+                message: data.message,
+                user: {
+                    id: user._id,
+                    email: user.email || null,
+                    email_verified_at: user.email_verified_at,
+                    phone: user.phone || null,
+                    phone_verified_at: user.phone_verified_at,
+                },
+            };
 
         } catch (error) {
             return rejectWithValue(error);

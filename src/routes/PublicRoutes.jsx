@@ -11,8 +11,8 @@ import {
 export default function PublicRoutes() {
 
     const Guard = () => {
-        const { isAuthenticated } = useSelector((state) => state.auth);
-        return !isAuthenticated ? <Outlet /> : <Navigate to='/' />;
+        const { user } = useSelector((state) => state.auth);
+        return !user ? <Outlet /> : <Navigate to='/' />;
     };
 
     return (

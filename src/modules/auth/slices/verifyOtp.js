@@ -13,16 +13,20 @@ const verifyOtp = createAsyncThunk(
             const data = response.data;
 
             const existing = getState().auth.user;
-            const user = response.data.data.user;
+            const channel = payload.channel;
+            let user = response.data.data.user;
 
-            localStorage.setItem('user', JSON.stringify({
+            user = {
                 ...existing,
                 email_verified_at: user.email_verified_at,
                 phone_verified_at: user.phone_verified_at,
-            }));
+            };
 
-            const channel = payload.channel;
-            return { ...data, channel };
+            return {
+                message: data.message,
+                channel,
+                user,
+            };
 
         } catch (error) {
             return rejectWithValue(error);

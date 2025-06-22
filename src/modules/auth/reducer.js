@@ -8,12 +8,8 @@ import logoutUser from './slices/logoutUser';
 import forgotPasswordEmail from './slices/forgotPasswordEmail';
 import resetPassword from './slices/resetPassword';
 
-const user = localStorage.getItem('user');
-const token = localStorage.getItem('token');
-
 const initialState = {
-    user: user ? JSON.parse(user) : null,
-    isAuthenticated: token ? true : false,
+    user: null,
     loading: false,
     loaderOrigin: null,
     error: null,
@@ -26,7 +22,7 @@ export const authSlice = createSlice({
     reducers: {
         initiateLogin: (state, action) => {
             state.loading = true;
-            state.loaderOrigin = action.payload
+            state.loaderOrigin = action.payload;
         },
         clearFeedback: (state) => {
             state.message = null;
@@ -40,12 +36,12 @@ export const authSlice = createSlice({
                 state.loading = false;
             })
             .addCase(attemptLogin.fulfilled, (state, action) => {
-                state.isAuthenticated = true;
+                state.user = action.payload.user;
                 state.message = action.payload.message;
                 state.loading = false;
             })
             .addCase(googleUserAuth.fulfilled, (state, action) => {
-                state.isAuthenticated = true;
+                state.user = action.payload.user;
                 state.message = action.payload.message;
                 state.loading = false;
             })
@@ -62,10 +58,10 @@ export const authSlice = createSlice({
             .addCase(verifyOtp.fulfilled, (state, action) => {
                 const data = action.payload;
                 if (data.channel === 'email') {
-                    state.user.email_verified_at = data.data.user.email_verified_at;
+                    state.user.email_verified_at = data.user.email_verified_at;
                 }
                 if (data.channel === 'phone') {
-                    state.user.phone_verified_at = data.data.user.phone_verified_at;
+                    state.user.phone_verified_at = data.user.phone_verified_at;
                 }
                 state.message = data.message;
                 state.loading = false;
@@ -74,7 +70,7 @@ export const authSlice = createSlice({
                 state.loading = true;
             })
             .addCase(logoutUser.fulfilled, (state, action) => {
-                state.isAuthenticated = false;
+                state.user = null;
                 state.message = action.payload.message;
                 state.loading = false;
             })

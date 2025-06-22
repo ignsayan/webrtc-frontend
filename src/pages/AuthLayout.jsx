@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import SignupForm from '../components/SignupForm';
 import LoginForm from '../components/LoginForm';
 import GoogleAuth from '../components/GoogleAuth';

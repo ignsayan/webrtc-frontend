@@ -11,8 +11,8 @@ import {
 export default function ProtectedRoutes() {
 
     const Guard = () => {
-        const { isAuthenticated } = useSelector((state) => state.auth);
-        return isAuthenticated ? <Outlet /> : <Navigate to='/login' />;
+        const { user } = useSelector((state) => state.auth);
+        return user ? <Outlet /> : <Navigate to='/login' />;
     };
 
     return (

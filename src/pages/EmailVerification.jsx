@@ -23,7 +23,7 @@ export default function EmailVerification() {
     };
 
     const resendCode = async () => {
-        const data = { attribute: user.phone };
+        const data = { attribute: user.email };
         await dispatch(sendVerification(data)).unwrap();
     };
 
