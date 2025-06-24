@@ -3,20 +3,27 @@ import ChatWindowSkeleton from './loaders/ChatWindowSkeleton';
 
 export default function ChatWindow({
     setSidebarOpen,
-    activeChatUser,
-    chats,
+    sender,
+    receiver,
+    messages,
     handleReply,
 }) {
 
-    const messagesEndRef = useRef(null);
+    const messagesRef = useRef(null);
 
     useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [chats]);
+        const ref = messagesRef.current;
+        if (ref) ref.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
 
-    if (!activeChatUser) return <ChatWindowSkeleton />;
+    const handleSubmit = (form) => {
+        const data = {
+            sender: sender?.id,
+            receiver: receiver?._id,
+            content: form.get('content'),
+        };
+        if (data.content) handleReply(data);
+    };
 
     return (
         <>
@@ -30,42 +37,43 @@ export default function ChatWindow({
                         ☰
                     </button>
                     <img
-                        src={activeChatUser.photo || `https://i.pravatar.cc/150?u=${activeChatUser.uid}`}
-                        className="w-10 h-10 rounded-full object-cover"
+                        src={receiver.photo || `https://ui-avatars.com/api/?name=${receiver.first_name}+${receiver.last_name}&background=random`} className="w-10 h-10 rounded-full object-cover"
                     />
-                    <h2 className="text-lg font-semibold truncate">{activeChatUser.name}</h2>
+                    <h2 className="text-lg font-semibold truncate">
+                        {`${receiver.first_name} ${receiver.last_name}`}
+                    </h2>
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
-                    {chats.map((chat, index) => (
+                <div div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+                    {messages.map((message, index) => (
                         <Fragment key={index}>
-                            {chat.sender !== activeChatUser.uid ? (
+                            {message.sender !== receiver._id ? (
                                 <div className="flex justify-end">
                                     <div className="bg-gray-700 rounded-xl px-4 py-2 max-w-xs">
-                                        <p>{chat.message}</p>
+                                        <p>{message.content}</p>
                                         <p className="text-xs text-gray-400 mt-1">10:00 AM</p>
                                     </div>
                                 </div>
                             ) : (
                                 <div className="flex justify-start">
                                     <div className="bg-blue-600 rounded-xl px-4 py-2 max-w-xs">
-                                        <p>{chat.message}</p>
+                                        <p>{message.content}</p>
                                         <p className="text-xs text-gray-300 mt-1 text-right">10:02 AM</p>
                                     </div>
                                 </div>
                             )}
                         </Fragment>
                     ))}
-                    <div ref={messagesEndRef} />
+                    <div ref={messagesRef} />
                 </div>
 
                 {/* Reply Section */}
                 <form className="bg-gray-800 p-3 border-t border-gray-700"
-                    action={handleReply(activeChatUser.uid)}>
+                    action={handleSubmit}>
                     <div className="flex items-center gap-2">
                         <input
-                            type="text" name="message"
+                            type="text" name="content"
                             placeholder="Type your message..."
                             className="flex-1 bg-gray-700 px-4 py-2 rounded-xl text-white focus:outline-none"
                         />
@@ -76,7 +84,8 @@ export default function ChatWindow({
                         </button>
                     </div>
                 </form>
-            </main>
+
+            </main >
         </>
     );
 }

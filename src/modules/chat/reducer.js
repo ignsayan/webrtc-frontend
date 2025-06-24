@@ -1,58 +1,60 @@
 import { createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
-import getAvailableUsers from './slices/getAvailableUsers';
-import getChatroomUser from './slices/getChatroomUser';
-import getChatHistory from './slices/getChatHistory';
-import listenToMessages from './slices/listenToMessages';
+import getContactList from './slices/getContactList';
+import getChatroom from './slices/getChatroom';
 import sendMessage from './slices/sendMessage';
 
 const initialState = {
-    users: [],
-    chats: [],
-    activeChatRoom: false,
-    activeChatUser: {},
+    contacts: null,
+    chatroom: null,
+    receiver: null,
+    messages: [],
+    loading: false,
     error: null,
+    toast: null,
 };
 
-export const chatSlice = createSlice({
+export const messageslice = createSlice({
     'name': 'chat',
     initialState,
     reducers: {
-        resetChatState: (state, { payload } = {}) => {
-            state.chats = [];
+        resetMessages: (state, { payload } = {}) => {
+            state.messages = [];
             if (payload?.type === 'logout') {
-                state.activeChatRoom = false;
-                state.activeChatUser = {};
+                state.receiver = null;
             }
         },
         setMessages: (state, action) => {
-            state.chats = action.payload;
+            state.messages = action.payload;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getAvailableUsers.fulfilled, (state, action) => {
-                state.users = action.payload;
+            .addCase(getContactList.fulfilled, (state, action) => {
+                state.contacts = action.payload.contacts;
+                state.loading = false;
             })
-            .addCase(getChatroomUser.fulfilled, (state, action) => {
-                state.activeChatUser = action.payload;
-                state.activeChatRoom = true;
-            })
-            .addCase(getChatHistory.fulfilled, (state, action) => {
-                state.chats = action.payload;
+            .addCase(getChatroom.fulfilled, (state, action) => {
+                state.receiver = action.payload.receiver;
+                state.messages = action.payload.messages;
+                state.chatroom = action.payload.chatroom;
+                state.loading = false;
             })
             .addMatcher(isRejectedWithValue, (state, action) => {
-                state.error = action.payload;
+                state.error = {
+                    message: action.payload.message,
+                    status: action.payload.status,
+                    errors: action.payload.errors,
+                };
+                state.loading = false;
             })
     }
 });
 
-export const { resetChatState, setMessages } = chatSlice.actions
+export const { resetMessages, setMessages } = messageslice.actions
 export {
-    getAvailableUsers,
-    getChatroomUser,
-    getChatHistory,
-    listenToMessages,
+    getContactList,
+    getChatroom,
     sendMessage,
 };
 
-export default chatSlice.reducer;
+export default messageslice.reducer;

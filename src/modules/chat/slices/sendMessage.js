@@ -1,28 +1,26 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db, generateChatRoom } from '../../../configs/firebase';
+import axiosInstance from '../../../utilities/axiosInstance';
 
 const sendMessage = createAsyncThunk(
     'chat/sendMessage',
-    async ({ sender, receiver, message }, { rejectWithValue }) => {
+    async (payload, { rejectWithValue }) => {
 
         try {
-            const chatRoom = generateChatRoom(sender, receiver);
-            const messagesRef = collection(db, 'chats', chatRoom, 'messages');
-
-            const chat = {
+            const { sender, receiver, content, chatroom } = payload;
+            
+            const response = await axiosInstance.post(
+                '/chat/send-message', {
                 sender,
                 receiver,
-                message,
-                timestamp: serverTimestamp(),
-            };
-            await addDoc(messagesRef, chat);
+                content,
+                chatroom,
+            });
 
-            const { timestamp, ...response } = chat;
-            return response;
+            const data = await response.data;
+            return data;
 
         } catch (error) {
-            return rejectWithValue(error.message);
+            return rejectWithValue(error);
         }
     });
 

@@ -12,7 +12,7 @@ export default function ResetPassword() {
     const {
         loading,
         error,
-        message
+        toast,
     } = useSelector((state) => state.auth);
 
     const handleReset = async (event) => {
@@ -72,7 +72,7 @@ export default function ResetPassword() {
                 </div>
             </div>
             <ToastNotifier
-                message={message}
+                message={toast}
                 error={error}
             />
         </>

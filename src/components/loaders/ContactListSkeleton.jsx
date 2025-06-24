@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function FriendListSkeleton() {
+export default function ContactListSkeleton() {
 
     return (
         <ul className="space-y-3 flex-1 overflow-y-auto animate-pulse">

@@ -13,7 +13,7 @@ const initialState = {
     loading: false,
     loaderOrigin: null,
     error: null,
-    message: null,
+    toast: null,
 };
 
 export const authSlice = createSlice({
@@ -25,31 +25,31 @@ export const authSlice = createSlice({
             state.loaderOrigin = action.payload;
         },
         clearFeedback: (state) => {
-            state.message = null;
+            state.toast = null;
             state.error = null;
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(registerUser.fulfilled, (state, action) => {
-                state.message = action.payload.message;
+                state.toast = action.payload.message;
                 state.loading = false;
             })
             .addCase(attemptLogin.fulfilled, (state, action) => {
                 state.user = action.payload.user;
-                state.message = action.payload.message;
+                state.toast = action.payload.message;
                 state.loading = false;
             })
             .addCase(googleUserAuth.fulfilled, (state, action) => {
                 state.user = action.payload.user;
-                state.message = action.payload.message;
+                state.toast = action.payload.message;
                 state.loading = false;
             })
             .addCase(sendVerification.pending, (state) => {
                 state.loading = true;
             })
             .addCase(sendVerification.fulfilled, (state, action) => {
-                state.message = action.payload.message;
+                state.toast = action.payload.message;
                 state.loading = false;
             })
             .addCase(verifyOtp.pending, (state) => {
@@ -63,7 +63,7 @@ export const authSlice = createSlice({
                 if (data.channel === 'phone') {
                     state.user.phone_verified_at = data.user.phone_verified_at;
                 }
-                state.message = data.message;
+                state.toast = data.message;
                 state.loading = false;
             })
             .addCase(logoutUser.pending, (state) => {
@@ -71,21 +71,21 @@ export const authSlice = createSlice({
             })
             .addCase(logoutUser.fulfilled, (state, action) => {
                 state.user = null;
-                state.message = action.payload.message;
+                state.toast = action.payload.message;
                 state.loading = false;
             })
             .addCase(forgotPasswordEmail.pending, (state) => {
                 state.loading = true;
             })
             .addCase(forgotPasswordEmail.fulfilled, (state, action) => {
-                state.message = action.payload.message;
+                state.toast = action.payload.message;
                 state.loading = false;
             })
             .addCase(resetPassword.pending, (state) => {
                 state.loading = true;
             })
             .addCase(resetPassword.fulfilled, (state, action) => {
-                state.message = action.payload.message;
+                state.toast = action.payload.message;
                 state.loading = false;
             })
             .addMatcher(isRejectedWithValue, (state, action) => {

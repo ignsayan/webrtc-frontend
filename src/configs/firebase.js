@@ -8,10 +8,6 @@ const firebaseConfig = {
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
 };
 
-export const generateChatRoom = (sender, receiver) => {
-    return [sender, receiver].sort().join('_');
-};
-
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);

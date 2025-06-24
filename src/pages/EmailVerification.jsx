@@ -13,8 +13,8 @@ export default function EmailVerification() {
     const {
         user,
         loading,
-        message,
-        error
+        error,
+        toast,
     } = useSelector((state) => state.auth);
 
     const verifyEmail = async (code) => {
@@ -50,7 +50,7 @@ export default function EmailVerification() {
                 </div>
             </div>
             <ToastNotifier
-                message={message}
+                message={toast}
                 error={error}
             />
         </>

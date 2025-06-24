@@ -1,10 +1,10 @@
 import React from 'react';
-import FriendListSkeleton from './loaders/FriendListSkeleton';
+import ContactListSkeleton from './loaders/ContactListSkeleton';
 
-export default function FriendList({
+export default function ContactList({
     sidebarOpen,
     setSidebarOpen,
-    users,
+    contacts,
     openInbox,
     handleLogout,
     loading,
@@ -29,31 +29,30 @@ export default function FriendList({
                 </button>
 
                 {/* Chats Header */}
-                <h2 className="text-xl font-semibold mb-4">Chats</h2>
+                <h2 className="text-xl font-semibold mb-4">Contacts</h2>
 
-                {/* User List */}
-                {users.length > 0
+                {/* Contact List */}
+                {contacts && contacts.length > 0
                     ? <ul className="space-y-3 flex-1 overflow-y-auto">
-                        {users.map((user, i) => (
+                        {contacts.map((contact, i) => (
                             <li
                                 key={i}
-                                onClick={openInbox(user.uid)}
+                                onClick={openInbox(contact._id)}
                                 className="flex items-center gap-3 p-3 bg-gray-700 rounded-xl hover:bg-gray-600 cursor-pointer"
                             >
                                 <img
-                                    src={user.photo || `https://i.pravatar.cc/150?img=${i + 1}`}
-                                    className="w-10 h-10 rounded-full object-cover"
+                                    src={contact.photo || `https://ui-avatars.com/api/?name=${contact.first_name}+${contact.last_name}&background=random`} className="w-10 h-10 rounded-full object-cover"
                                 />
                                 <div className="flex-1">
                                     <div className="font-medium">
-                                        {user.name} {localStorage.getItem('uid') === user.uid && '(You)'}
+                                        {`${contact.first_name} ${contact.last_name}`}
                                     </div>
-                                    <div className="text-sm text-gray-400 truncate">{user.email}</div>
+                                    <div className="text-sm text-gray-400 truncate">{contact.email}</div>
                                 </div>
                             </li>
                         ))}
                     </ul>
-                    : <FriendListSkeleton />
+                    : <ContactListSkeleton />
                 }
 
                 {/* Logout Button */}

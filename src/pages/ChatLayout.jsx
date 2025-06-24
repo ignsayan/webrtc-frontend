@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import FriendList from '../components/FriendList';
+import ContactList from '../components/ContactList';
 import ChatStartScreen from '../components/ChatStartScreen';
 import ChatWindow from '../components/ChatWindow';
 import ToastNotifier from '../components/ToastNotifier';
 import { logoutUser } from '../modules/auth/reducer';
 import {
-    getAvailableUsers,
-    getChatroomUser,
-    getChatHistory,
-    listenToMessages,
-    resetChatState,
+    resetMessages,
+    getContactList,
+    getChatroom,
     sendMessage,
 } from '../modules/chat/reducer';
 
@@ -20,50 +18,39 @@ export default function ChatLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
     const {
-        user,
-        error,
-        message
-    } = useSelector((state) => state.auth);
-    const {
+        contacts,
+        chatroom,
+        receiver,
+        messages,
         loading,
-        users,
-        activeChatRoom,
-        activeChatUser,
-        chats
+        error,
+        toast,
     } = useSelector((state) => state.chat);
 
     useEffect(() => {
         if (!user.email_verified_at) navigate('/verification/email');
         if (!user.phone_verified_at) navigate('/verification/phone');
-        dispatch(getAvailableUsers());
+        dispatch(getContactList());
     }, [user]);
 
-    const openInbox = (uid) => () => {
-        const currentUserId = localStorage.getItem('uid');
-        dispatch(resetChatState());
-        dispatch(getChatroomUser(uid));
-        dispatch(getChatHistory({
-            sender: currentUserId,
-            receiver: uid,
-        }));
-        dispatch(listenToMessages({
-            sender: currentUserId,
-            receiver: uid,
-        }));
+    const openInbox = (receiver) => () => {
+        dispatch(resetMessages());
+        const data = {
+            sender: user.id,
+            receiver,
+        };
+        dispatch(getChatroom(data));
     };
 
-    const handleReply = (receiver) => (form) => {
-        const chat = {
-            sender: localStorage.getItem('uid'),
-            receiver,
-            message: form.get('message'),
-        };
-        dispatch(sendMessage(chat));
+    const handleReply = (data) => {
+        const body = { ...data, chatroom };
+        dispatch(sendMessage(body));
     };
 
     const handleLogout = () => {
-        dispatch(resetChatState({ type: 'logout' }));
+        dispatch(resetMessages({ type: 'logout' }));
         dispatch(logoutUser());
     };
 
@@ -72,26 +59,27 @@ export default function ChatLayout() {
             {user?.email_verified_at && user?.phone_verified_at &&
                 <>
                     <div className="min-h-screen flex bg-gray-900 text-white overflow-hidden">
-                        <FriendList
+                        <ContactList
                             sidebarOpen={sidebarOpen}
                             setSidebarOpen={setSidebarOpen}
-                            users={users}
+                            contacts={contacts}
                             openInbox={openInbox}
                             handleLogout={handleLogout}
                             loading={loading}
                         />
-                        {!activeChatRoom
+                        {!receiver
                             ? <ChatStartScreen setSidebarOpen={setSidebarOpen} />
                             : <ChatWindow
                                 setSidebarOpen={setSidebarOpen}
-                                activeChatUser={activeChatUser}
-                                chats={chats}
+                                sender={user}
+                                receiver={receiver}
+                                messages={messages}
                                 handleReply={handleReply}
                             />
                         }
                     </div>
                     <ToastNotifier
-                        message={message}
+                        message={toast}
                         error={error}
                     />
                 </>

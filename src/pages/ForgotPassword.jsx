@@ -11,7 +11,7 @@ export default function ForgotPassword() {
     const {
         loading,
         error,
-        message
+        toast,
     } = useSelector((state) => state.auth);
 
     const getPasswordResetLink = async (event) => {
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
                 </div>
             </div>
             <ToastNotifier
-                message={message}
+                message={toast}
                 error={error}
             />
         </>

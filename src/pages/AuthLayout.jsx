@@ -22,7 +22,7 @@ export default function AuthPage() {
         loading,
         loaderOrigin,
         error,
-        message
+        toast,
     } = useSelector((state) => state.auth);
 
     const handleRegistration = async (data) => {
@@ -103,7 +103,7 @@ export default function AuthPage() {
                 </div>
             </div>
             <ToastNotifier
-                message={message}
+                message={toast}
                 error={error}
             />
         </>
