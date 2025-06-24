@@ -50,16 +50,20 @@ export default function ChatWindow({
                         <Fragment key={index}>
                             {message.sender !== receiver._id ? (
                                 <div className="flex justify-end">
-                                    <div className="bg-gray-700 rounded-xl px-4 py-2 max-w-xs">
+                                    <div className="bg-gray-700 rounded-xl px-4 py-2 w-full sm:max-w-xs break-words">
                                         <p>{message.content}</p>
-                                        <p className="text-xs text-gray-400 mt-1">10:00 AM</p>
+                                        <p className="text-xs text-gray-400 mt-1 text-right">
+                                            {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </p>
                                     </div>
                                 </div>
                             ) : (
                                 <div className="flex justify-start">
-                                    <div className="bg-blue-600 rounded-xl px-4 py-2 max-w-xs">
+                                    <div className="bg-blue-600 rounded-xl px-4 py-2 max-w-xs break-words">
                                         <p>{message.content}</p>
-                                        <p className="text-xs text-gray-300 mt-1 text-right">10:02 AM</p>
+                                        <p className="text-xs text-gray-300 mt-1 text-right">
+                                            {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </p>
                                     </div>
                                 </div>
                             )}

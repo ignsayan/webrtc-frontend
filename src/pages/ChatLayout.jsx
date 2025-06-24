@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import socket from '../utilities/socketInstance';
 import ContactList from '../components/ContactList';
 import ChatStartScreen from '../components/ChatStartScreen';
 import ChatWindow from '../components/ChatWindow';
@@ -11,6 +12,7 @@ import {
     getContactList,
     getChatroom,
     sendMessage,
+    setMessages,
 } from '../modules/chat/reducer';
 
 export default function ChatLayout() {
@@ -35,23 +37,26 @@ export default function ChatLayout() {
         dispatch(getContactList());
     }, [user]);
 
-    const openInbox = (receiver) => () => {
+    const openInbox = (receiver) => async () => {
         dispatch(resetMessages());
         const data = {
             sender: user.id,
             receiver,
         };
-        dispatch(getChatroom(data));
+        const response = await dispatch(getChatroom(data)).unwrap();
+        socket.emit('chatroom', response.chatroom);
+        socket.off('message');
+        socket.on('message', (message) => dispatch(setMessages(message)));
     };
 
-    const handleReply = (data) => {
+    const handleReply = async (data) => {
         const body = { ...data, chatroom };
-        dispatch(sendMessage(body));
+        await dispatch(sendMessage(body)).unwrap();
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         dispatch(resetMessages({ type: 'logout' }));
-        dispatch(logoutUser());
+        await dispatch(logoutUser()).unwrap();
     };
 
     return (
