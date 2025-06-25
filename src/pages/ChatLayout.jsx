@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import socket from '../utilities/socketInstance';
 import ContactList from '../components/ContactList';
 import ChatStartScreen from '../components/ChatStartScreen';
 import ChatWindow from '../components/ChatWindow';
@@ -12,7 +11,7 @@ import {
     getContactList,
     getChatroom,
     sendMessage,
-    setMessages,
+    listenToMessage,
 } from '../modules/chat/reducer';
 
 export default function ChatLayout() {
@@ -43,10 +42,8 @@ export default function ChatLayout() {
             sender: user.id,
             receiver,
         };
-        const response = await dispatch(getChatroom(data)).unwrap();
-        socket.emit('chatroom', response.chatroom);
-        socket.off('message');
-        socket.on('message', (message) => dispatch(setMessages(message)));
+        await dispatch(getChatroom(data)).unwrap();
+        await dispatch(listenToMessage()).unwrap();
     };
 
     const handleReply = async (data) => {

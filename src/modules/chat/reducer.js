@@ -2,6 +2,7 @@ import { createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
 import getContactList from './slices/getContactList';
 import getChatroom from './slices/getChatroom';
 import sendMessage from './slices/sendMessage';
+import listenToMessage from './slices/listenToMessage';
 
 const initialState = {
     contacts: null,
@@ -23,9 +24,6 @@ export const messageslice = createSlice({
                 state.receiver = null;
             }
         },
-        setMessages: (state, action) => {
-            state.messages.push(action.payload);
-        },
     },
     extraReducers: (builder) => {
         builder
@@ -39,6 +37,9 @@ export const messageslice = createSlice({
                 state.chatroom = action.payload.chatroom;
                 state.loading = false;
             })
+            .addCase('chat/listenToMessage/fulfilled',(state, action) => {
+                state.messages.push(action.payload);
+            })
             .addMatcher(isRejectedWithValue, (state, action) => {
                 state.error = {
                     message: action.payload.message,
@@ -50,11 +51,12 @@ export const messageslice = createSlice({
     }
 });
 
-export const { resetMessages, setMessages } = messageslice.actions
+export const { resetMessages } = messageslice.actions
 export {
     getContactList,
     getChatroom,
     sendMessage,
+    listenToMessage,
 };
 
 export default messageslice.reducer;
