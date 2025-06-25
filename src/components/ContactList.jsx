@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ContactListSkeleton from './loaders/ContactListSkeleton';
 
 export default function ContactList({
+    isGroup,
+    setIsGroup,
     sidebarOpen,
     setSidebarOpen,
     contacts,
@@ -9,6 +11,9 @@ export default function ContactList({
     handleLogout,
     loading,
 }) {
+
+    const activeTabStyle = 'bg-gray-700 text-white';
+    const inactiveTabStyle = 'bg-gray-600 text-gray-300 hover:bg-gray-500';
 
     return (
         <>
@@ -20,7 +25,7 @@ export default function ContactList({
                     ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
                 `}
             >
-                {/* Close button (mobile only) */}
+                {/* Close Button (responsive only) */}
                 <button
                     className="md:hidden mb-4 px-4 py-1 bg-gray-700 rounded hover:bg-gray-600"
                     onClick={() => setSidebarOpen(false)}
@@ -28,8 +33,23 @@ export default function ContactList({
                     Close ✕
                 </button>
 
-                {/* Chats Header */}
-                <h2 className="text-xl font-semibold mb-4">Contacts</h2>
+                {/* Tab Switch */}
+                <div className="flex justify-between mb-4">
+                    <button
+                        onClick={() => setIsGroup(false)}
+                        className={`w-1/2 px-2 py-2 rounded-l-xl text-center text-sm font-medium
+                        ${!isGroup ? activeTabStyle : inactiveTabStyle}`}
+                    >
+                        Inbox
+                    </button>
+                    <button
+                        onClick={() => setIsGroup(true)}
+                        className={`w-1/2 px-2 py-2 rounded-r-xl text-center text-sm font-medium
+                        ${isGroup ? activeTabStyle : inactiveTabStyle}`}
+                    >
+                        Group
+                    </button>
+                </div>
 
                 {/* Contact List */}
                 {contacts && contacts.length > 0
@@ -47,7 +67,9 @@ export default function ContactList({
                                     <div className="font-medium">
                                         {`${contact.first_name} ${contact.last_name}`}
                                     </div>
-                                    <div className="text-sm text-gray-400 truncate">{contact.email}</div>
+                                    <div className="text-sm text-gray-400 truncate">
+                                        {contact.last_message || 'No messages yet'}
+                                    </div>
                                 </div>
                             </li>
                         ))}

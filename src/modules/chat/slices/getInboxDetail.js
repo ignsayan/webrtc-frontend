@@ -1,18 +1,18 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../../utilities/axiosInstance';
 
-const getContactList = createAsyncThunk(
-    'chat/getContactList',
-    async (payload, { getState, rejectWithValue }) => {
+const getInboxDetail = createAsyncThunk(
+    'chat/getInboxDetail',
+    async (payload, { rejectWithValue }) => {
 
         try {
-            const state = getState().auth;
-
+            const { chatroom, sender } = payload;
+            
             const response = await axiosInstance.get(
-                '/chat/contacts', {
+                '/chat/inbox', {
                 params: {
-                    group: payload.isGroup,
-                    sender: state.user.id,
+                    chatroom,
+                    sender,
                 }
             });
 
@@ -24,4 +24,4 @@ const getContactList = createAsyncThunk(
         }
     });
 
-export default getContactList;
+export default getInboxDetail;

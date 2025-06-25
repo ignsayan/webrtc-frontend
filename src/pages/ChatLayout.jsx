@@ -9,14 +9,17 @@ import { logoutUser } from '../modules/auth/reducer';
 import {
     resetMessages,
     getContactList,
-    getChatroom,
+    generateRoom,
+    getInboxDetail,
     sendMessage,
     listenToMessage,
 } from '../modules/chat/reducer';
 
 export default function ChatLayout() {
 
+    const [isGroup, setIsGroup] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
@@ -33,17 +36,25 @@ export default function ChatLayout() {
     useEffect(() => {
         if (!user.email_verified_at) navigate('/verification/email');
         if (!user.phone_verified_at) navigate('/verification/phone');
-        dispatch(getContactList());
-    }, [user]);
+        (async () => {
+            await dispatch(getContactList({ isGroup })).unwrap();
+        })();
+    }, [user, isGroup]);
 
     const openInbox = (receiver) => async () => {
         dispatch(resetMessages());
-        const data = {
+        
+        const response = await dispatch(generateRoom({
             sender: user.id,
             receiver,
-        };
-        await dispatch(getChatroom(data)).unwrap();
-        await dispatch(listenToMessage()).unwrap();
+        })).unwrap();
+
+        await dispatch(getInboxDetail({
+            chatroom: response.room,
+            sender: user.id,
+        })).unwrap();
+
+        await dispatch(listenToMessage(response.room)).unwrap();
     };
 
     const handleReply = async (data) => {
@@ -64,6 +75,8 @@ export default function ChatLayout() {
                         <ContactList
                             sidebarOpen={sidebarOpen}
                             setSidebarOpen={setSidebarOpen}
+                            isGroup={isGroup}
+                            setIsGroup={setIsGroup}
                             contacts={contacts}
                             openInbox={openInbox}
                             handleLogout={handleLogout}

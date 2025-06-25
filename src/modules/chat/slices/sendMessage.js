@@ -6,14 +6,14 @@ const sendMessage = createAsyncThunk(
     async (payload, { rejectWithValue }) => {
 
         try {
-            const { sender, receiver, content, chatroom } = payload;
-            
+            const { chatroom, sender, receiver, content } = payload;
+
             const response = await axiosInstance.post(
                 '/chat/send-message', {
+                chatroom,
                 sender,
                 receiver,
                 content,
-                chatroom,
             });
 
             const data = await response.data;

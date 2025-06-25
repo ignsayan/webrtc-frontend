@@ -3,18 +3,16 @@ import { io } from 'socket.io-client';
 
 const listenToMessage = createAsyncThunk(
     'chat/listenToMessage',
-    async (_, { getState, rejectWithValue, dispatch }) => {
+    async (payload, { rejectWithValue, dispatch }) => {
 
         try {
-            const state = getState().chat;
-
             const socket = io(import.meta.env.VITE_API_URL, {
                 autoConnect: true,
                 transports: ['websocket'],
             });
 
-            socket.emit('join:chatroom', state.chatroom);
-            socket.off('message');
+            socket.emit('join:chatroom', payload);
+            socket.off('listen:message');
 
             socket.on('listen:message', (message) => {
                 dispatch({

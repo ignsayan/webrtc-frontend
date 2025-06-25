@@ -10,7 +10,7 @@ export default function Button({
         <button
             type={type}
             disabled={loading}
-            className={`w-full py-2 rounded bg-blue-600 text-white font-semibold flex items-center justify-center gap-2
+            className={`w-full py-2 rounded-lg bg-blue-600 text-white font-semibold flex items-center justify-center gap-2
                 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-blue-500'}`}
         >
             {loading && (

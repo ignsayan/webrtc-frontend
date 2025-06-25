@@ -62,7 +62,7 @@ export default function ChatWindow({
                                     <div className="bg-blue-600 rounded-xl px-4 py-2 max-w-xs break-words">
                                         <p>{message.content}</p>
                                         <p className="text-xs text-gray-300 mt-1 text-right">
-                                            {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {new Date(message.createdAt).toLocaleTimeString([],{ hour: '2-digit', minute: '2-digit' })}
                                         </p>
                                     </div>
                                 </div>
