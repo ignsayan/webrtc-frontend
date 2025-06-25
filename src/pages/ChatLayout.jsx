@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { disconnectSocket } from '../utilities/socketInstance';
 import ContactList from '../components/ContactList';
 import ChatStartScreen from '../components/ChatStartScreen';
 import ChatWindow from '../components/ChatWindow';
@@ -43,7 +44,7 @@ export default function ChatLayout() {
 
     const openInbox = (receiver) => async () => {
         dispatch(resetMessages());
-        
+
         const response = await dispatch(generateRoom({
             sender: user.id,
             receiver,
@@ -65,6 +66,7 @@ export default function ChatLayout() {
     const handleLogout = async () => {
         dispatch(resetMessages({ type: 'logout' }));
         await dispatch(logoutUser()).unwrap();
+        disconnectSocket();
     };
 
     return (
