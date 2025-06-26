@@ -10,6 +10,7 @@ const initialState = {
     chatroom: null,
     receiver: null,
     messages: [],
+    activity: null,
     loading: false,
     error: null,
     toast: null,
@@ -24,6 +25,9 @@ export const messageslice = createSlice({
             if (payload?.type === 'logout') {
                 state.receiver = null;
             }
+        },
+        setActivity: (state, action) => {
+            state.activity = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -41,7 +45,7 @@ export const messageslice = createSlice({
                 state.messages = action.payload.messages;
                 state.loading = false;
             })
-            .addCase('chat/listenToMessage/fulfilled',(state, action) => {
+            .addCase('chat/listenToMessage/fulfilled', (state, action) => {
                 state.messages.push(action.payload);
             })
             .addMatcher(isRejectedWithValue, (state, action) => {
@@ -55,7 +59,7 @@ export const messageslice = createSlice({
     }
 });
 
-export const { resetMessages } = messageslice.actions
+export const { resetMessages, setActivity } = messageslice.actions
 export {
     getContactList,
     generateRoom,

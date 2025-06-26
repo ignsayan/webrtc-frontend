@@ -29,6 +29,7 @@ export default function ChatLayout() {
         chatroom,
         receiver,
         messages,
+        activity,
         loading,
         error,
         toast,
@@ -87,6 +88,9 @@ export default function ChatLayout() {
                         {!receiver
                             ? <ChatStartScreen setSidebarOpen={setSidebarOpen} />
                             : <ChatWindow
+                                chatroom={chatroom}
+                                activity={activity}
+                                sidebarOpen={sidebarOpen}
                                 setSidebarOpen={setSidebarOpen}
                                 sender={user}
                                 receiver={receiver}

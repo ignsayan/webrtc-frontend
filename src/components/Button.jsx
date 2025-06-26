@@ -2,16 +2,19 @@ import React from 'react';
 
 export default function Button({
     type = 'submit',
+    onClick,
     loading,
     label,
+    buttonColor = 'bg-blue-600',
+    hoverColor = 'bg-blue-500',
+    shape = 'rounded-xl',
 }) {
 
     return (
         <button
-            type={type}
-            disabled={loading}
-            className={`w-full py-2 rounded-lg bg-blue-600 text-white font-semibold flex items-center justify-center gap-2
-                ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-blue-500'}`}
+            type={type} disabled={loading} onClick={onClick}
+            className={`w-full py-2 text-white shadow-full font-semibold flex items-center justify-center gap-2
+                ${shape} ${buttonColor} ${loading ? `opacity-70 cursor-not-allowed` : `hover:${hoverColor}`}`}
         >
             {loading && (
                 <svg

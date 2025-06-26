@@ -8,7 +8,7 @@ const registerUser = createAsyncThunk(
         try {
             const response = await axiosInstance.post(
                 '/auth/register',
-                payload
+                payload,
             );
             const data = response.data;
             return data;

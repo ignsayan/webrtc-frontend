@@ -11,7 +11,7 @@ export default function GoogleAuth({
         <>
             <button
                 onClick={handleGoogleAuthentication}
-                className="w-full flex items-center justify-center gap-3 bg-white text-gray-700 font-semibold py-3 px-6 rounded-lg shadow hover:bg-white-100 transition duration-200 cursor-pointer"
+                className="w-full flex items-center justify-center gap-3 bg-white text-gray-700 font-semibold py-3 px-6 rounded-xl shadow-full hover:bg-white-100 transition duration-200 cursor-pointer"
             >
                 {loading
                     ? <svg className="animate-spin h-5 w-5 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

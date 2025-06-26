@@ -8,7 +8,7 @@ const forgotPasswordEmail = createAsyncThunk(
         try {
             const response = await axiosInstance.post(
                 '/auth/forgot-password',
-                payload
+                payload,
             );
             const data = response.data;
             return data;

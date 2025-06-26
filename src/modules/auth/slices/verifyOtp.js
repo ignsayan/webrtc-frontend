@@ -8,7 +8,7 @@ const verifyOtp = createAsyncThunk(
         try {
             const response = await axiosInstance.post(
                 '/auth/verify',
-                payload
+                payload,
             );
             const data = response.data;
 

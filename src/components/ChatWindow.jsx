@@ -1,7 +1,10 @@
-import React, { Fragment, useEffect, useRef } from 'react';
-import ChatWindowSkeleton from './loaders/ChatWindowSkeleton';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { getSocket } from '../utilities/socketInstance';
 
 export default function ChatWindow({
+    chatroom,
+    activity,
+    sidebarOpen,
     setSidebarOpen,
     sender,
     receiver,
@@ -10,6 +13,8 @@ export default function ChatWindow({
 }) {
 
     const messagesRef = useRef(null);
+    const typingTimeoutRef = useRef(null);
+    const socket = getSocket();
 
     useEffect(() => {
         const ref = messagesRef.current;
@@ -18,18 +23,43 @@ export default function ChatWindow({
 
     const handleSubmit = (form) => {
         const data = {
-            sender: sender?.id,
-            receiver: receiver?._id,
+            sender: sender.id,
+            receiver: receiver._id,
             content: form.get('content'),
         };
-        if (data.content) handleReply(data);
+        if (data.content) {
+            handleReply(data);
+            socket.emit('stop:typing', chatroom);
+        }
+    };
+
+    const handleTyping = () => {
+        socket.emit('start:typing', {
+            chatroom,
+            user: {
+                id: sender.id,
+                name: sender.first_name,
+            },
+            typing: true,
+        });
+        clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => {
+            socket.emit('stop:typing', chatroom);
+        }, 1500);
     };
 
     return (
         <>
-            {/* Main Chat Area */}
+            {/* Header Section */}
             <main className="flex-1 flex flex-col max-h-screen">
-                <div className="bg-gray-800 p-4 border-b border-gray-700 flex items-center gap-3">
+                <div
+                    className={`
+                        bg-gray-800 p-3 border-gray-700 gap-3 h-18 flex items-center
+                        transition-all duration-200 ease-in-out
+                        ${sidebarOpen ? 'opacity-0 -translate-y-0 pointer-events-none' : 'opacity-100 translate-y-0'}
+                        md:opacity-100 md:translate-y-0 md:pointer-events-auto
+                    `}
+                >
                     <button
                         className="md:hidden p-2 text-white rounded hover:bg-gray-700"
                         onClick={() => setSidebarOpen(true)}
@@ -37,32 +67,44 @@ export default function ChatWindow({
                         ☰
                     </button>
                     <img
-                        src={receiver.photo || `https://ui-avatars.com/api/?name=${receiver.first_name}+${receiver.last_name}&background=random`} className="w-10 h-10 rounded-full object-cover"
+                        src={receiver.photo || `https://ui-avatars.com/api/?name=${receiver.first_name}+${receiver.last_name}&background=random`}
+                        className="w-12 h-12 rounded-full object-cover"
                     />
-                    <h2 className="text-lg font-semibold truncate">
-                        {`${receiver.first_name} ${receiver.last_name}`}
-                    </h2>
+                    <div className="relative flex flex-col justify-center truncate overflow-hidden">
+                        <span className="text font-semibold mb-2">
+                            {`${receiver.first_name} ${receiver.last_name}`}
+                        </span>
+                        <span className="text-md text-gray-400 leading-1 h-3">
+                            {activity?.typing && activity.user.id !== sender.id ? 'typing...' : 'online'}
+                        </span>
+                    </div>
                 </div>
 
-                {/* Messages */}
+                {/* Messages Area */}
                 <div div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
                     {messages.map((message, index) => (
                         <Fragment key={index}>
                             {message.sender !== receiver._id ? (
                                 <div className="flex justify-end">
-                                    <div className="bg-gray-700 rounded-xl px-4 py-2 w-full sm:max-w-xs break-words">
+                                    <div className="bg-gray-700 rounded-xl px-3 py-2 sm:max-w-xs break-words">
                                         <p>{message.content}</p>
                                         <p className="text-xs text-gray-400 mt-1 text-right">
-                                            {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {new Date(message.createdAt).toLocaleTimeString([], {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
                                         </p>
                                     </div>
                                 </div>
                             ) : (
                                 <div className="flex justify-start">
-                                    <div className="bg-blue-600 rounded-xl px-4 py-2 max-w-xs break-words">
+                                    <div className="bg-blue-600 rounded-xl px-3 py-2 sm:max-w-xs break-words">
                                         <p>{message.content}</p>
                                         <p className="text-xs text-gray-300 mt-1 text-right">
-                                            {new Date(message.createdAt).toLocaleTimeString([],{ hour: '2-digit', minute: '2-digit' })}
+                                            {new Date(message.createdAt).toLocaleTimeString([], {
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                            })}
                                         </p>
                                     </div>
                                 </div>
@@ -73,13 +115,14 @@ export default function ChatWindow({
                 </div>
 
                 {/* Reply Section */}
-                <form className="bg-gray-800 p-3 border-t border-gray-700"
+                <form className="bg-gray-800 p-4 border-gray-700"
                     action={handleSubmit}>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-4">
                         <input
                             type="text" name="content"
                             placeholder="Type your message..."
                             className="flex-1 bg-gray-700 px-4 py-2 rounded-xl text-white focus:outline-none"
+                            onChange={handleTyping}
                         />
                         <button
                             className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl font-semibold"
@@ -88,8 +131,7 @@ export default function ChatWindow({
                         </button>
                     </div>
                 </form>
-
-            </main >
+            </main>
         </>
     );
 }

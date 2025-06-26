@@ -1,6 +1,6 @@
 import React from 'react';
-import { MdChat } from 'react-icons/md';
 import { FiUserPlus } from 'react-icons/fi';
+import { MdChat } from 'react-icons/md';
 
 export default function ChatStartScreen({ setSidebarOpen }) {
     return (
@@ -24,9 +24,9 @@ export default function ChatStartScreen({ setSidebarOpen }) {
                     </div>
 
                     <div className="w-full max-w-sm px-4">
-                        <div className="flex items-center bg-gray-700 rounded-xl overflow-hidden">
+                        <div className="flex items-center bg-gray-700 rounded-xl overflow-hidden shadow-xl">
                             <input
-                                type="text"
+                                type="text" name="search" required
                                 placeholder="Search users..."
                                 className="flex-1 px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none"
                             />

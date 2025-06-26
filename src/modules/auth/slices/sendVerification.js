@@ -8,7 +8,7 @@ const sendVerification = createAsyncThunk(
         try {
             const response = await axiosInstance.post(
                 '/auth/send-verification',
-                payload
+                payload,
             );
             const data = response.data;
             return data;

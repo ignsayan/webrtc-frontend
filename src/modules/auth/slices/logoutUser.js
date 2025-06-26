@@ -7,7 +7,7 @@ const logoutUser = createAsyncThunk(
 
         try {
             const response = await axiosInstance.post(
-                '/auth/logout'
+                '/auth/logout',
             );
             const data = response.data;
             if (response.status === 200) {

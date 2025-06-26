@@ -8,7 +8,7 @@ const attemptLogin = createAsyncThunk(
         try {
             const response = await axiosInstance.post(
                 '/auth/login',
-                payload
+                payload,
             );
             
             const data = response.data;
@@ -20,6 +20,8 @@ const attemptLogin = createAsyncThunk(
                 message: data.message,
                 user: {
                     id: user._id,
+                    first_name: user.first_name,
+                    last_name: user.last_name || null,
                     email: user.email || null,
                     email_verified_at: user.email_verified_at,
                     phone: user.phone || null,

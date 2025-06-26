@@ -8,7 +8,7 @@ const resetPassword = createAsyncThunk(
         try {
             const response = await axiosInstance.post(
                 '/auth/reset-password',
-                payload
+                payload,
             );
             const data = response.data;
             return data;
