@@ -1,12 +1,15 @@
 import { createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
-import getContactList from './slices/getContactList';
+import getRecentChats from './slices/getRecentChats';
 import generateRoom from './slices/generateRoom';
 import getInboxDetail from './slices/getInboxDetail';
 import sendMessage from './slices/sendMessage';
 import listenToMessage from './slices/listenToMessage';
+import searchUsers from './slices/searchUsers';
+import logoutUser from '../auth/slices/logoutUser';
 
 const initialState = {
-    contacts: null,
+    users: null,
+    recentChats: null,
     chatroom: null,
     receiver: null,
     messages: [],
@@ -32,8 +35,13 @@ export const messageslice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getContactList.fulfilled, (state, action) => {
-                state.contacts = action.payload.contacts;
+            .addCase(logoutUser.fulfilled, () => initialState)
+            .addCase(getRecentChats.fulfilled, (state, action) => {
+                state.recentChats = action.payload.contacts;
+                state.loading = false;
+            })
+            .addCase(searchUsers.fulfilled, (state, action) => {
+                state.users = action.payload.users;
                 state.loading = false;
             })
             .addCase(generateRoom.fulfilled, (state, action) => {
@@ -61,11 +69,12 @@ export const messageslice = createSlice({
 
 export const { resetMessages, setActivity } = messageslice.actions
 export {
-    getContactList,
+    getRecentChats,
     generateRoom,
     getInboxDetail,
     sendMessage,
     listenToMessage,
+    searchUsers,
 };
 
 export default messageslice.reducer;

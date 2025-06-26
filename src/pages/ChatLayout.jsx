@@ -9,11 +9,12 @@ import ToastNotifier from '../components/ToastNotifier';
 import { logoutUser } from '../modules/auth/reducer';
 import {
     resetMessages,
-    getContactList,
+    getRecentChats,
     generateRoom,
     getInboxDetail,
     sendMessage,
     listenToMessage,
+    searchUsers,
 } from '../modules/chat/reducer';
 
 export default function ChatLayout() {
@@ -25,7 +26,8 @@ export default function ChatLayout() {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const {
-        contacts,
+        users,
+        recentChats,
         chatroom,
         receiver,
         messages,
@@ -39,16 +41,21 @@ export default function ChatLayout() {
         if (!user.email_verified_at) navigate('/verification/email');
         if (!user.phone_verified_at) navigate('/verification/phone');
         (async () => {
-            await dispatch(getContactList({ isGroup })).unwrap();
+            await dispatch(getRecentChats({ isGroup })).unwrap();
         })();
     }, [user, isGroup]);
 
-    const openInbox = (receiver) => async () => {
+    const findNewUsers = async (key) => {
+        await dispatch(searchUsers({
+            sender: user.id, key,
+        })).unwrap();
+    };
+
+    const openInbox = async (receiver) => {
         dispatch(resetMessages());
 
         const response = await dispatch(generateRoom({
-            sender: user.id,
-            receiver,
+            sender: user.id, receiver,
         })).unwrap();
 
         await dispatch(getInboxDetail({
@@ -80,22 +87,27 @@ export default function ChatLayout() {
                             setSidebarOpen={setSidebarOpen}
                             isGroup={isGroup}
                             setIsGroup={setIsGroup}
-                            contacts={contacts}
+                            recentChats={recentChats}
                             openInbox={openInbox}
                             handleLogout={handleLogout}
                             loading={loading}
                         />
                         {!receiver
-                            ? <ChatStartScreen setSidebarOpen={setSidebarOpen} />
+                            ? <ChatStartScreen
+                                setSidebarOpen={setSidebarOpen}
+                                findNewUsers={findNewUsers}
+                                openInbox={openInbox}
+                                users={users}
+                            />
                             : <ChatWindow
-                                chatroom={chatroom}
-                                activity={activity}
                                 sidebarOpen={sidebarOpen}
                                 setSidebarOpen={setSidebarOpen}
+                                chatroom={chatroom}
                                 sender={user}
                                 receiver={receiver}
                                 messages={messages}
                                 handleReply={handleReply}
+                                activity={activity}
                             />
                         }
                     </div>

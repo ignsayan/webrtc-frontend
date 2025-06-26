@@ -1,5 +1,6 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 import { getSocket } from '../utilities/socketInstance';
+import { IoSend } from 'react-icons/io5'
 
 export default function ChatWindow({
     chatroom,
@@ -81,7 +82,7 @@ export default function ChatWindow({
                 </div>
 
                 {/* Messages Area */}
-                <div div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+                <div div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 custom-scrollbar">
                     {messages.map((message, index) => (
                         <Fragment key={index}>
                             {message.sender !== receiver._id ? (
@@ -98,7 +99,7 @@ export default function ChatWindow({
                                 </div>
                             ) : (
                                 <div className="flex justify-start">
-                                    <div className="bg-blue-600 rounded-xl px-3 py-2 sm:max-w-xs break-words">
+                                    <div className="bg-teal-900 rounded-xl px-3 py-2 sm:max-w-xs break-words">
                                         <p>{message.content}</p>
                                         <p className="text-xs text-gray-300 mt-1 text-right">
                                             {new Date(message.createdAt).toLocaleTimeString([], {
@@ -115,7 +116,7 @@ export default function ChatWindow({
                 </div>
 
                 {/* Reply Section */}
-                <form className="bg-gray-800 p-4 border-gray-700"
+                <form className="bg-gray-900 px-4 mt-2 mb-4 border-gray-700"
                     action={handleSubmit}>
                     <div className="flex items-center gap-4">
                         <input
@@ -125,9 +126,8 @@ export default function ChatWindow({
                             onChange={handleTyping}
                         />
                         <button
-                            className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl font-semibold"
-                        >
-                            Send
+                            className="bg-teal-700 hover:bg-teal-600 p-3 rounded-full">
+                            <IoSend className="w-5 h-5 text-white" />
                         </button>
                     </div>
                 </form>
