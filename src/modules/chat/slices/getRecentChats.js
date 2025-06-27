@@ -9,7 +9,7 @@ const getRecentChats = createAsyncThunk(
             const state = getState().auth;
 
             const response = await axiosInstance.get(
-                '/chat/recent', {
+                '/chat/recents', {
                 params: {
                     group: payload.isGroup,
                     sender: state.user.id,

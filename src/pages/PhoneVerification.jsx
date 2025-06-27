@@ -1,6 +1,7 @@
-import React from 'react';
-import OtpInput from '../components/OtpInput';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import OtpInput from '../components/OtpInput';
 import ToastNotifier from '../components/ToastNotifier';
 import {
     sendVerification,
@@ -9,6 +10,7 @@ import {
 
 export default function PhoneVerification() {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const {
         user,
@@ -16,6 +18,10 @@ export default function PhoneVerification() {
         error,
         toast,
     } = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        if (user.phone_verified_at) return navigate('/');
+    }, [user]);
 
     const verifyPhone = async (code) => {
         const data = { code, channel: 'phone' };

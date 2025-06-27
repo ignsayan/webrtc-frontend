@@ -20,7 +20,7 @@ export default function ContactList({
         <>
             <aside
                 className={`
-                    fixed inset-y-0 left-0 bg-gray-800 p-4 h-screen w-64 flex flex-col
+                    fixed inset-y-0 left-0 bg-gray-800 p-4 h-screen w-65 flex flex-col
                     transform transition-transform duration-300 ease-in-out
                     md:relative md:translate-x-0 border-r border-gray-700
                     ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -55,20 +55,20 @@ export default function ContactList({
                 {/* Contact List */}
                 {recentChats
                     ? <ul className="space-y-3 flex-1 mb-4 overflow-y-auto scrollbar-hidden">
-                        {recentChats.map((user, index) => (
+                        {recentChats.map((recent, index) => (
                             <li
-                                key={index} onClick={() => openInbox(user._id)}
+                                key={index} onClick={() => openInbox(recent.participants[0]?._id)}
                                 className="flex items-center gap-3 p-3 bg-gray-700 rounded-full hover:bg-gray-600 cursor-pointer shadow-xl"
                             >
                                 <img
-                                    src={user.photo || `https://ui-avatars.com/api/?name=${user.first_name}+${user.last_name}&background=random`} className="w-10 h-10 rounded-full object-cover"
+                                    src={recent.photo || `https://ui-avatars.com/api/?name=${recent.participants[0]?.first_name}+${recent.participants[0]?.last_name}&background=random`} className="w-10 h-10 rounded-full object-cover"
                                 />
                                 <div className="flex-1">
                                     <div className="font-medium">
-                                        {`${user.first_name} ${user.last_name}`}
+                                        {`${recent.participants[0]?.first_name} ${recent.participants[0]?.last_name}`}
                                     </div>
                                     <div className="text-sm text-gray-400 truncate">
-                                        {user.last_message || 'No messages yet'}
+                                        {recent.message?.content || 'No messages yet'}
                                     </div>
                                 </div>
                             </li>

@@ -38,8 +38,8 @@ export default function ChatLayout() {
     } = useSelector((state) => state.chat);
 
     useEffect(() => {
-        if (!user.email_verified_at) navigate('/verification/email');
-        if (!user.phone_verified_at) navigate('/verification/phone');
+        if (!user.email_verified_at) return navigate('/verification/email');
+        if (!user.phone_verified_at) return navigate('/verification/phone');
         (async () => {
             await dispatch(getRecentChats({ isGroup })).unwrap();
         })();

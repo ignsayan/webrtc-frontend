@@ -1,6 +1,7 @@
-import React from 'react';
-import OtpInput from '../components/OtpInput';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import OtpInput from '../components/OtpInput';
 import ToastNotifier from '../components/ToastNotifier';
 import {
     sendVerification,
@@ -9,6 +10,7 @@ import {
 
 export default function EmailVerification() {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const {
         user,
@@ -16,6 +18,14 @@ export default function EmailVerification() {
         error,
         toast,
     } = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        if (user.email_verified_at) {
+            const data = { attribute: user.phone };
+            dispatch(sendVerification(data)).unwrap();
+            return navigate('/verification/phone');
+        }
+    }, [user]);
 
     const verifyEmail = async (code) => {
         const data = { code, channel: 'email' };

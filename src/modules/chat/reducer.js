@@ -37,7 +37,7 @@ export const messageslice = createSlice({
         builder
             .addCase(logoutUser.fulfilled, () => initialState)
             .addCase(getRecentChats.fulfilled, (state, action) => {
-                state.recentChats = action.payload.contacts;
+                state.recentChats = action.payload.recents;
                 state.loading = false;
             })
             .addCase(searchUsers.fulfilled, (state, action) => {
