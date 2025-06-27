@@ -69,7 +69,7 @@ export default function ChatWindow({
                     </button>
                     <img
                         src={receiver.avatar || `https://ui-avatars.com/api/?name=${receiver.first_name}+${receiver.last_name}&background=random`}
-                        className="w-12 h-12 rounded-full object-cover"
+                        className="w-12 h-12 rounded-full object-cover shadow-sm"
                     />
                     <div className="relative flex flex-col justify-center truncate overflow-hidden">
                         <span className="text font-semibold mb-2">
@@ -87,7 +87,7 @@ export default function ChatWindow({
                         <Fragment key={index}>
                             {message.sender !== receiver._id ? (
                                 <div className="flex justify-end">
-                                    <div className="bg-gray-700 rounded-xl px-3 py-2 sm:max-w-xs break-words">
+                                    <div className="bg-gray-700 rounded-xl px-3 py-2 sm:max-w-md break-words">
                                         <p>{message.content}</p>
                                         <p className="text-xs text-gray-400 mt-1 text-right">
                                             {new Date(message.createdAt).toLocaleTimeString([], {
@@ -99,7 +99,7 @@ export default function ChatWindow({
                                 </div>
                             ) : (
                                 <div className="flex justify-start">
-                                    <div className="bg-teal-900 rounded-xl px-3 py-2 sm:max-w-xs break-words">
+                                    <div className="bg-teal-900 rounded-xl px-3 py-2 sm:max-w-md break-words">
                                         <p>{message.content}</p>
                                         <p className="text-xs text-gray-300 mt-1 text-right">
                                             {new Date(message.createdAt).toLocaleTimeString([], {

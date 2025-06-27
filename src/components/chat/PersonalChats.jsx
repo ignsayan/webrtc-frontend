@@ -13,7 +13,7 @@ export default function PersonalChats({
                     className="flex items-center gap-3 p-3 bg-gray-700 rounded-full hover:bg-gray-600 cursor-pointer shadow-xl"
                 >
                     <img
-                        src={recent.participants[0]?.avatar || `https://ui-avatars.com/api/?name=${recent.participants[0]?.first_name}+${recent.participants[0]?.last_name}&background=random`} className="w-10 h-10 rounded-full object-cover"
+                        src={recent.participants[0]?.avatar || `https://ui-avatars.com/api/?name=${recent.participants[0]?.first_name}+${recent.participants[0]?.last_name}&background=random`} className="w-10 h-10 rounded-full object-cover shadow-md"
                     />
                     <div className="flex-1">
                         <div className="font-medium">

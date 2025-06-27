@@ -51,7 +51,7 @@ export default function SearchUser({
 
                         <div className="mt-4 max-h-84 overflow-y-auto bg-gray-700 rounded-xl shadow-xl scrollbar-hidden">
                             <ul>
-                                {key.length > 3 && users.map((user, index) => (
+                                {key.length > 3 && users && users.map((user, index) => (
                                     <li
                                         key={index} onClick={() => openInbox(user._id)}
                                         className="p-3 hover:bg-gray-600 cursor-pointer flex items-center space-x-3"
