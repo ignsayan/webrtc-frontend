@@ -61,3 +61,25 @@
     scrollbar-width: thin;
     scrollbar-color: #374151 #111827;
 }
+
+@media screen and (min-width: 1080px) {
+    .receiver {
+        max-width: 60% !important;
+        margin-right: auto;
+    }
+    .sender {
+        max-width: 60% !important;
+        margin-left: auto;
+    }
+}
+
+@media screen and (max-width: 1080px) {
+    .receiver {
+        max-width: 80% !important;
+        margin-right: auto;
+    }
+    .sender {
+        max-width: 80% !important;
+        margin-left: auto;
+    }
+}
