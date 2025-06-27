@@ -19,10 +19,9 @@ import {
 
 export default function ChatLayout() {
 
-    const [isGroup, setIsGroup] = useState(false);
     const [searchToggle, setSearchToggle] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
@@ -42,9 +41,11 @@ export default function ChatLayout() {
         if (!user.email_verified_at) return navigate('/verification/email');
         if (!user.phone_verified_at) return navigate('/verification/phone');
         (async () => {
-            await dispatch(getRecentChats({ isGroup })).unwrap();
+            await dispatch(getRecentChats({
+                sender: user.id
+            })).unwrap();
         })();
-    }, [user, isGroup]);
+    }, [user]);
 
     const findNewUsers = async (key) => {
         await dispatch(searchUsers({
@@ -87,8 +88,6 @@ export default function ChatLayout() {
                             sidebarOpen={sidebarOpen}
                             setSidebarOpen={setSidebarOpen}
                             setSearchToggle={setSearchToggle}
-                            isGroup={isGroup}
-                            setIsGroup={setIsGroup}
                             recents={recents}
                             openInbox={openInbox}
                             handleLogout={handleLogout}

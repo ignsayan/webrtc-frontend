@@ -3,16 +3,13 @@ import axiosInstance from '../../../utilities/axiosInstance';
 
 const getRecentChats = createAsyncThunk(
     'chat/getRecentChats',
-    async (payload, { getState, rejectWithValue }) => {
+    async (payload, { rejectWithValue }) => {
 
         try {
-            const state = getState().auth;
-
             const response = await axiosInstance.get(
                 '/chat/recents', {
                 params: {
-                    group: payload.isGroup,
-                    sender: state.user.id,
+                    sender: payload.sender,
                 }
             });
 
