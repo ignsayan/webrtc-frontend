@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import OtpInput from '../components/OtpInput';
-import ToastNotifier from '../components/ToastNotifier';
+import OtpInput from '../components/common/OtpInput';
+import ToastNotifier from '../components/common/ToastNotifier';
 import {
     sendVerification,
     verifyOtp,

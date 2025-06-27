@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import SignupForm from '../components/SignupForm';
-import LoginForm from '../components/LoginForm';
-import GoogleAuth from '../components/GoogleAuth';
+import SignupForm from '../components/auth/SignupForm';
+import LoginForm from '../components/auth/LoginForm';
+import GoogleAuth from '../components/auth/GoogleAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { auth } from '../configs/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import ToastNotifier from '../components/ToastNotifier';
+import ToastNotifier from '../components/common/ToastNotifier';
 import { Link } from 'react-router-dom';
 import {
     googleUserAuth,

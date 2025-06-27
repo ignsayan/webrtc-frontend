@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiUserPlus } from 'react-icons/fi';
 import { MdChat } from 'react-icons/md';
 
-export default function ChatStartScreen({
+export default function SearchUser({
     setSidebarOpen,
     findNewUsers,
     openInbox,
     users,
 }) {
 
+    const [key, setKey] = useState('');
+
     const handleFormInput = (event) => {
-        const key = event.target.value;
-        if (key.length > 3) {
-            findNewUsers(key.trim());
-        }
+        setKey(event.target.value.trim());
+        if (key.length > 3) findNewUsers(key);
     };
 
     return (
@@ -49,25 +49,22 @@ export default function ChatStartScreen({
                             </span>
                         </div>
 
-                        {/* User list */}
-                        {users &&
-                            <div className="mt-4 max-h-84 overflow-y-auto bg-gray-700 rounded-xl shadow-xl scrollbar-hidden">
-                                <ul>
-                                    {users.map((user, index) => (
-                                        <li
-                                            key={index} onClick={() => openInbox(user._id)}
-                                            className="p-3 hover:bg-gray-600 cursor-pointer flex items-center space-x-3"
-                                        >
-                                            <img
-                                                src={user.photo || `https://ui-avatars.com/api/?name=${user.first_name}+${user.last_name}&background=random`}
-                                                className="w-8 h-8 rounded-full shadow-xl"
-                                            />
-                                            <span>{`${user.first_name} ${user.last_name}`}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        }
+                        <div className="mt-4 max-h-84 overflow-y-auto bg-gray-700 rounded-xl shadow-xl scrollbar-hidden">
+                            <ul>
+                                {key.length > 3 && users.map((user, index) => (
+                                    <li
+                                        key={index} onClick={() => openInbox(user._id)}
+                                        className="p-3 hover:bg-gray-600 cursor-pointer flex items-center space-x-3"
+                                    >
+                                        <img
+                                            src={user.photo || `https://ui-avatars.com/api/?name=${user.first_name}+${user.last_name}&background=random`}
+                                            className="w-8 h-8 rounded-full shadow-xl"
+                                        />
+                                        <span>{`${user.first_name} ${user.last_name}`}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

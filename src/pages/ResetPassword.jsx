@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '../components/Button';
+import Button from '../components/common/Button';
 import { resetPassword } from '../modules/auth/reducer';
-import ToastNotifier from '../components/ToastNotifier';
+import ToastNotifier from '../components/common/ToastNotifier';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function ResetPassword() {

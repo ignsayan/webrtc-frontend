@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useRef } from 'react';
-import { getSocket } from '../utilities/socketInstance';
+import { getSocket } from '../../utilities/socketInstance';
 import { IoSend } from 'react-icons/io5'
 
 export default function ChatWindow({
@@ -68,7 +68,7 @@ export default function ChatWindow({
                         ☰
                     </button>
                     <img
-                        src={receiver.photo || `https://ui-avatars.com/api/?name=${receiver.first_name}+${receiver.last_name}&background=random`}
+                        src={receiver.avatar || `https://ui-avatars.com/api/?name=${receiver.first_name}+${receiver.last_name}&background=random`}
                         className="w-12 h-12 rounded-full object-cover"
                     />
                     <div className="relative flex flex-col justify-center truncate overflow-hidden">
@@ -82,8 +82,8 @@ export default function ChatWindow({
                 </div>
 
                 {/* Messages Area */}
-                <div div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 custom-scrollbar">
-                    {messages.map((message, index) => (
+                <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 custom-scrollbar">
+                    {messages && typeof (messages) === 'object' && messages.map((message, index) => (
                         <Fragment key={index}>
                             {message.sender !== receiver._id ? (
                                 <div className="flex justify-end">

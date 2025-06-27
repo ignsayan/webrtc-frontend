@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { clearFeedback } from '../modules/auth/reducer';
+import { clearFeedback } from '../../modules/auth/reducer';
 import { useDispatch } from 'react-redux';
 
 export default function ToastNotifier({

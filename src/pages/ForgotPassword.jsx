@@ -1,8 +1,8 @@
 import React from 'react';
-import Button from '../components/Button';
+import Button from '../components/common/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { forgotPasswordEmail } from '../modules/auth/reducer';
-import ToastNotifier from '../components/ToastNotifier';
+import ToastNotifier from '../components/common/ToastNotifier';
 import { Link } from 'react-router-dom';
 
 export default function ForgotPassword() {

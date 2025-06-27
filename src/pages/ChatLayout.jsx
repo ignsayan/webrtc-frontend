@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { disconnectSocket } from '../utilities/socketInstance';
-import ContactList from '../components/ContactList';
-import ChatStartScreen from '../components/ChatStartScreen';
-import ChatWindow from '../components/ChatWindow';
-import ToastNotifier from '../components/ToastNotifier';
+import SearchUser from '../components/chat/SearchUser';
+import RecentChats from '../components/chat/RecentChats';
+import ChatWindow from '../components/chat/ChatWindow';
+import ToastNotifier from '../components/common/ToastNotifier';
 import { logoutUser } from '../modules/auth/reducer';
 import {
     resetMessages,
@@ -20,14 +20,15 @@ import {
 export default function ChatLayout() {
 
     const [isGroup, setIsGroup] = useState(false);
+    const [searchToggle, setSearchToggle] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-
+    
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const {
+        recents,
         users,
-        recentChats,
         chatroom,
         receiver,
         messages,
@@ -52,18 +53,18 @@ export default function ChatLayout() {
     };
 
     const openInbox = async (receiver) => {
+        setSearchToggle(false);
         dispatch(resetMessages());
-
         const response = await dispatch(generateRoom({
             sender: user.id, receiver,
         })).unwrap();
-
         await dispatch(getInboxDetail({
             chatroom: response.room,
             sender: user.id,
         })).unwrap();
-
-        await dispatch(listenToMessage(response.room)).unwrap();
+        await dispatch(listenToMessage(
+            response.room,
+        )).unwrap();
     };
 
     const handleReply = async (data) => {
@@ -82,18 +83,19 @@ export default function ChatLayout() {
             {user?.email_verified_at && user?.phone_verified_at &&
                 <>
                     <div className="min-h-screen flex bg-gray-900 text-white overflow-hidden">
-                        <ContactList
+                        <RecentChats
                             sidebarOpen={sidebarOpen}
                             setSidebarOpen={setSidebarOpen}
+                            setSearchToggle={setSearchToggle}
                             isGroup={isGroup}
                             setIsGroup={setIsGroup}
-                            recentChats={recentChats}
+                            recents={recents}
                             openInbox={openInbox}
                             handleLogout={handleLogout}
                             loading={loading}
                         />
-                        {!receiver
-                            ? <ChatStartScreen
+                        {searchToggle || !receiver
+                            ? <SearchUser
                                 setSidebarOpen={setSidebarOpen}
                                 findNewUsers={findNewUsers}
                                 openInbox={openInbox}

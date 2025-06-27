@@ -8,8 +8,8 @@ import searchUsers from './slices/searchUsers';
 import logoutUser from '../auth/slices/logoutUser';
 
 const initialState = {
+    recents: [],
     users: null,
-    recentChats: null,
     chatroom: null,
     receiver: null,
     messages: [],
@@ -37,7 +37,7 @@ export const messageslice = createSlice({
         builder
             .addCase(logoutUser.fulfilled, () => initialState)
             .addCase(getRecentChats.fulfilled, (state, action) => {
-                state.recentChats = action.payload.recents;
+                state.recents = action.payload.recents;
                 state.loading = false;
             })
             .addCase(searchUsers.fulfilled, (state, action) => {
