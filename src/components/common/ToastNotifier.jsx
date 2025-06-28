@@ -28,7 +28,7 @@ export default function ToastNotifier({
             toast.success(message, theme);
             dispatch(clearFeedback());
         }
-    }, [error, message]);
+    }, [error, message, dispatch]);
 
     return (
         <>

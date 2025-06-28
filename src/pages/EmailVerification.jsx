@@ -25,7 +25,7 @@ export default function EmailVerification() {
             dispatch(sendVerification(data)).unwrap();
             return navigate('/verification/phone');
         }
-    }, [user]);
+    }, [user, navigate, dispatch]);
 
     const verifyEmail = async (code) => {
         const data = { code, channel: 'email' };

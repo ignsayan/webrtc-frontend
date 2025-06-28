@@ -8,13 +8,15 @@ export default function Button({
     buttonColor = 'bg-blue-600',
     hoverColor = 'bg-blue-500',
     shape = 'rounded-xl',
+    customClass = ''
 }) {
 
     return (
         <button
             type={type} disabled={loading} onClick={onClick}
             className={`w-full py-2 text-white shadow-full font-semibold flex items-center justify-center gap-2
-                ${shape} ${buttonColor} ${loading ? `opacity-70 cursor-not-allowed` : `hover:${hoverColor}`}`}
+                ${shape} ${buttonColor} ${customClass} 
+                ${loading ? `opacity-70 cursor-not-allowed` : `hover:${hoverColor}`}`}
         >
             {loading && (
                 <svg

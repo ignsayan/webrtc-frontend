@@ -21,7 +21,7 @@ export default function PhoneVerification() {
 
     useEffect(() => {
         if (user.phone_verified_at) return navigate('/');
-    }, [user]);
+    }, [user, navigate, dispatch]);
 
     const verifyPhone = async (code) => {
         const data = { code, channel: 'phone' };

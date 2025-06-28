@@ -39,13 +39,15 @@ export default function ChatLayout() {
 
     useEffect(() => {
         if (!user.email_verified_at) return navigate('/verification/email');
-        if (!user.phone_verified_at) return navigate('/verification/phone');
+        if ((user.auth_provider === 'local') && !user.phone_verified_at) {
+            return navigate('/verification/phone');
+        }
         (async () => {
             await dispatch(getRecentChats({
                 sender: user.id
             })).unwrap();
         })();
-    }, [user]);
+    }, [user, navigate, dispatch]);
 
     const findNewUsers = async (key) => {
         await dispatch(searchUsers({
@@ -81,43 +83,39 @@ export default function ChatLayout() {
 
     return (
         <>
-            {user?.email_verified_at && user?.phone_verified_at &&
-                <>
-                    <div className="min-h-screen flex bg-gray-900 text-white overflow-hidden">
-                        <RecentChats
-                            sidebarOpen={sidebarOpen}
-                            setSidebarOpen={setSidebarOpen}
-                            setSearchToggle={setSearchToggle}
-                            recents={recents}
-                            openInbox={openInbox}
-                            handleLogout={handleLogout}
-                            loading={loading}
-                        />
-                        {searchToggle || !receiver
-                            ? <SearchUser
-                                setSidebarOpen={setSidebarOpen}
-                                findNewUsers={findNewUsers}
-                                openInbox={openInbox}
-                                users={users}
-                            />
-                            : <ChatWindow
-                                sidebarOpen={sidebarOpen}
-                                setSidebarOpen={setSidebarOpen}
-                                chatroom={chatroom}
-                                sender={user}
-                                receiver={receiver}
-                                messages={messages}
-                                handleReply={handleReply}
-                                activity={activity}
-                            />
-                        }
-                    </div>
-                    <ToastNotifier
-                        message={toast}
-                        error={error}
+            <div className="min-h-screen flex bg-gray-900 text-white overflow-hidden">
+                <RecentChats
+                    sidebarOpen={sidebarOpen}
+                    setSidebarOpen={setSidebarOpen}
+                    setSearchToggle={setSearchToggle}
+                    recents={recents}
+                    openInbox={openInbox}
+                    handleLogout={handleLogout}
+                    loading={loading}
+                />
+                {searchToggle || !receiver
+                    ? <SearchUser
+                        setSidebarOpen={setSidebarOpen}
+                        findNewUsers={findNewUsers}
+                        openInbox={openInbox}
+                        users={users}
                     />
-                </>
-            }
+                    : <ChatWindow
+                        sidebarOpen={sidebarOpen}
+                        setSidebarOpen={setSidebarOpen}
+                        chatroom={chatroom}
+                        sender={user}
+                        receiver={receiver}
+                        messages={messages}
+                        handleReply={handleReply}
+                        activity={activity}
+                    />
+                }
+            </div>
+            <ToastNotifier
+                message={toast}
+                error={error}
+            />
         </>
     );
 }

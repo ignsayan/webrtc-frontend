@@ -27,6 +27,7 @@ const googleUserAuth = createAsyncThunk(
                     phone: user.phone || null,
                     phone_verified_at: user.phone_verified_at,
                     avatar: user.avatar || null,
+                    auth_provider: user.auth_provider,
                 },
             };
 
